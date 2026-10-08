@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mitanin Heat Desk</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --safe: #10b981;
+      --primary: #2563eb;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text-main); padding: 20px; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    h1 { font-size: 1.5rem; color: #1e293b; }
+    .badge { padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .badge-simulated { background: #fef3c7; color: #b45309; }
+    .badge-live { background: #dcfce7; color: #15803d; }
+
+    .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--card-bg); padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
+    select, button, input { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.9rem; }
+    button { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: 500; }
+    button:hover { opacity: 0.9; }
+
+    .card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); padding: 16px; }
+    
+    /* Audio Briefing Box */
+    .audio-box { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    audio { flex: 1; min-width: 250px; height: 36px; }
+
+    /* Ranked List */
+    .household-list { display: flex; flex-direction: column; gap: 10px; }
+    .household-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-radius: 6px; border-left: 6px solid #cbd5e1; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .item-high { border-left-color: var(--danger); }
+    .item-medium { border-left-color: var(--warning); }
+    .item-low { border-left-color: var(--safe); }
+    .household-info h4 { font-size: 1rem; margin-bottom: 4px; }
+    .household-info p { font-size: 0.85rem; color: var(--text-muted); }
+    .btn-visit { background: #0f172a; padding: 6px 12px; font-size: 0.8rem; }
+    .btn-visit.visited { background: #e2e8f0; color: #64748b; cursor: not-allowed; }
+
+    /* Canvas Chart */
+    canvas { width: 100%; height: 180px; }
+    .chart-legend { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>Mitanin Heat Desk</h1>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Predictive Wet-Bulb Triage & Automated Voice Briefing</p>
+    </div>
+    <div id="forecastBadge" class="badge badge-live">Live Forecast</div>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls">
+    <label for="mitaninSelect"><strong>Mitanin:</strong></label>
+    <select id="mitaninSelect">
+      <option value="M01">M01 - Ward 1</option>
+      <option value="M02">M02 - Ward 2</option>
+      <option value="M03">M03 - Ward 3</option>
+      <option value="M04">M04 - Ward 4</option>
+      <option value="M05">M05 - Ward 5</option>
+    </select>
+
+    <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+      <input type="checkbox" id="demoHotToggle" checked>
+      Simulate Extreme Pre-Monsoon Day (?demo=hot)
+    </label>
+
+    <button onclick="fetchHeatDeskData()">Refresh Triage</button>
+  </div>
+
+  <!-- Audio Briefing Panel -->
+  <div class="card audio-box" id="audioCard">
+    <div style="flex: 1;">
+      <strong>Hindi Voice Briefing (Polly)</strong>
+      <p id="hindiBriefingText" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">Loading briefing...</p>
+    </div>
+    <audio id="audioPlayer" controls>
+      <source id="audioSource" src="" type="audio/mpeg">
+      Your browser does not support audio element.
+    </audio>
+  </div>
+
+  <!-- Why This Score: Wet-bulb Hourly Analysis -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+      <strong>Why This Score: Wet-Bulb Hourly Curve</strong>
+      <span id="peakNotice" style="font-size: 0.85rem; font-weight: 600; color: var(--danger);">Peak: --°C at --:--</span>
+    </div>
+    <canvas id="curveCanvas" width="800" height="200"></canvas>
+    <div class="chart-legend">
+      <div class="legend-item"><span class="dot" style="background: #2563eb;"></span> Wet-Bulb Temp (°C)</div>
+      <div class="legend-item"><span class="dot" style="background: #f59e0b;"></span> 28°C Watch Threshold</div>
+      <div class="legend-item"><span class="dot" style="background: #ef4444;"></span> 31°C Danger Threshold</div>
+    </div>
+  </div>
+
+  <!-- Ranked Households -->
+  <div>
+    <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Ranked Household Priority Visits</h3>
+    <div class="household-list" id="householdsContainer">
+      <p style="color: var(--text-muted);">Fetching triage list...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // REPLACE THIS with your actual deployed Lambda Function URL
+  const LAMBDA_URL = "https://YOUR_FUNCTION_URL_HERE.lambda-url.ap-south-1.on.aws/";
+
+  async function fetchHeatDeskData() {
+    const mitanin = document.getElementById("mitaninSelect").value;
+    const isHot = document.getElementById("demoHotToggle").checked;
+    const url = `${LAMBDA_URL}?mitanin=${mitanin}${isHot ? "&demo=hot" : ""}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      renderDashboard(data);
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      alert("Unable to fetch data from Lambda Function URL. Check CORS or URL configuration.");
+    }
+  }
+
+  function renderDashboard(data) {
+    // 1. Forecast Source Badge
+    const badge = document.getElementById("forecastBadge");
+    if (data.forecast_source === "simulated") {
+      badge.textContent = "Simulated Hot Day";
+      badge.className = "badge badge-simulated";
+    } else {
+      badge.textContent = "Live Open-Meteo Forecast";
+      badge.className = "badge badge-live";
+    }
+
+    // 2. Audio & Text Briefing
+    const audioPlayer = document.getElementById("audioPlayer");
+    const audioSource = document.getElementById("audioSource");
+    const briefingText = document.getElementById("hindiBriefingText");
+
+    briefingText.textContent = data.briefing_hi || "कोई विवरण उपलब्ध नहीं है।";
+    if (data.audio_url) {
+      audioSource.src = data.audio_url;
+      audioPlayer.load();
+      audioPlayer.style.display = "block";
+    } else {
+      audioPlayer.style.display = "none";
+    }
+
+    // 3. Peak Notice & Wet-bulb Curve Chart
+    if (data.analysis) {
+      document.getElementById("peakNotice").textContent = 
+        `Peak: ${data.analysis.peak_wetbulb}°C at ${data.analysis.peak_hour}:00 IST`;
+      drawCurve(data.analysis.curve);
+    }
+
+    // 4. Household List
+    const listContainer = document.getElementById("householdsContainer");
+    listContainer.innerHTML = "";
+
+    (data.ranked || []).forEach(item => {
+      const card = document.createElement("div");
+      const riskClass = item.risk === "High" ? "item-high" : (item.risk === "Medium" ? "item-medium" : "item-low");
+      card.className = `household-item ${riskClass}`;
+
+      card.innerHTML = `
+        <div class="household-info">
+          <h4>Household #${item.id} <span style="font-size:0.8rem; font-weight:normal; color:#64748b;">(Score: ${item.score})</span></h4>
+          <p><strong>Reason:</strong> ${item.reason_en}</p>
+          <p style="font-size: 0.8rem; color: #475569; margin-top:2px;">${item.reason_hi || ''}</p>
+        </div>
+        <button class="btn-visit" id="btn-${item.id}" onclick="markVisited('${item.id}', this)">Visited / ORS given</button>
+      `;
+      listContainer.appendChild(card);
+    });
+  }
+
+  async function markVisited(householdId, btn) {
+    btn.disabled = true;
+    btn.textContent = "Updating...";
+
+    try {
+      const res = await fetch(`${LAMBDA_URL}visit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ household_id: householdId, date: new Date().toISOString().slice(0, 10), status: "visited" })
+      });
+      if (res.ok) {
+        btn.textContent = "✓ Visited";
+        btn.classList.add("visited");
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      btn.textContent = "✓ Visited (Local)";
+      btn.classList.add("visited");
+    }
+  }
+
+  function drawCurve(curve) {
+    if (!curve || curve.length === 0) return;
+    const canvas = document.getElementById("curveCanvas");
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const padLeft = 40, padRight = 20, padTop = 20, padBottom = 30;
+    const chartW = w - padLeft - padRight;
+    const chartH = h - padTop - padBottom;
+
+    const minT = 20, maxT = 38;
+    const getY = (t) => padTop + chartH - ((t - minT) / (maxT - minT)) * chartH;
+    const getX = (idx) => padLeft + (idx / (curve.length - 1)) * chartW;
+
+    // Threshold lines
+    function drawLine(temp, color, dash = [5, 5]) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.setLineDash(dash);
+      const y = getY(temp);
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(w - padRight, y);
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.font = "10px sans-serif";
+      ctx.fillText(`${temp}°C`, padLeft - 28, y + 3);
+      ctx.restore();
+    }
+
+    drawLine(31, "#ef4444"); // Danger
+    drawLine(28, "#f59e0b"); // Watch
+
+    // Plot Wet-Bulb Curve
+    ctx.beginPath();
+    ctx.strokeStyle = "#2563eb";
+    ctx.lineWidth = 3;
+    curve.forEach((pt, i) => {
+      const x = getX(i);
+      const y = getY(pt.wetbulb);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Data points & X axis labels
+    curve.forEach((pt, i) => {
+      const x = getX(i);
+      const y = getY(pt.wetbulb);
+      ctx.fillStyle = "#2563eb";
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Time label
+      ctx.fillStyle = "#64748b";
+      ctx.font = "10px sans-serif";
+      ctx.fillText(`${pt.hour}h`, x - 8, h - 10);
+    });
+  }
+
+  // Initial call on load
+  window.addEventListener("DOMContentLoaded", fetchHeatDeskData);
+</script>
+</body>
+</html>
