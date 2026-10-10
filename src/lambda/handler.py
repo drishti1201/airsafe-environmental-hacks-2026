@@ -28,7 +28,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
-from risk.scoring import rank_households, build_briefing_hi
+try:
+    from risk.scoring import rank_households, build_briefing_hi
+except ImportError:  # pragma: no cover
+    from src.risk.scoring import rank_households, build_briefing_hi
 
 IST = timezone(timedelta(hours=5, minutes=30))
 LAT = float(os.environ.get("LAT", "21.25"))
