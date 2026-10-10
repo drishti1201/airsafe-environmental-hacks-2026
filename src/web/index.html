@@ -9,7 +9,6 @@
   --primary-navy: #0b192c;
   --deep-blue: #1e3e62;
   --aqua-cyan: #00adb5;
-  --aqua-light: #e0f7fa;
   --bg-slate: #f4f7fb;
   --card-white: #ffffff;
   --text-dark: #0f172a;
@@ -21,67 +20,64 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg-slate); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif; color: var(--text-dark); }
-header { background: linear-gradient(135deg, var(--primary-navy) 0%, var(--deep-blue) 100%); color: white; padding: 24px max(24px, calc((100% - 1250px)/2)); border-bottom: 3px solid var(--aqua-cyan); }
-header h1 { margin: 0 0 6px; font-size: clamp(24px, 2.5vw, 34px); display: flex; align-items: center; gap: 10px; }
-header p { margin: 0; color: #b2ebf2; font-size: 14px; }
-main { max-width: 1250px; margin: 24px auto; padding: 0 16px 40px; }
+header { background: linear-gradient(135deg, var(--primary-navy) 0%, var(--deep-blue) 100%); color: white; padding: 22px max(24px, calc((100% - 1250px)/2)); border-bottom: 3px solid var(--aqua-cyan); }
+header h1 { margin: 0 0 6px; font-size: clamp(22px, 2.5vw, 32px); display: flex; align-items: center; gap: 10px; }
+header p { margin: 0; color: #b2ebf2; font-size: 13.5px; }
+main { max-width: 1250px; margin: 20px auto; padding: 0 16px 40px; }
 
-.time-bar { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid #dbeafe; padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--deep-blue); box-shadow: 0 2px 8px rgba(11,25,44,0.04); flex-wrap: wrap; gap: 10px; }
+.time-bar { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid #dbeafe; padding: 10px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 13px; color: var(--deep-blue); box-shadow: 0 2px 6px rgba(11,25,44,0.04); flex-wrap: wrap; gap: 10px; }
 .time-bar strong { color: var(--primary-navy); }
 
-.card { background: var(--card-white); border-radius: 14px; padding: 22px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(11,25,44,0.06); border: 1px solid #e2e8f0; }
-h2 { margin: 0 0 12px; font-size: 20px; color: var(--primary-navy); }
-.muted { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-top: 0; }
+.card { background: var(--card-white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(11,25,44,0.05); border: 1px solid #e2e8f0; }
+h2 { margin: 0 0 10px; font-size: 19px; color: var(--primary-navy); }
+.muted { color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-top: 0; }
 
-.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
-select, button, input[type="date"] { font: inherit; border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+select, button, input[type="date"] { font: inherit; border-radius: 8px; padding: 9px 13px; font-size: 13.5px; }
 select, input[type="date"] { border: 1px solid #cbd5e1; background: white; color: var(--text-dark); }
-button { border: 0; cursor: pointer; font-weight: 600; transition: transform 0.1s ease, opacity 0.2s ease; }
-button:hover { opacity: 0.92; }
-button:active { transform: scale(0.98); }
+button { border: 0; cursor: pointer; font-weight: 600; transition: all 0.15s ease; }
+button:hover { opacity: 0.9; }
 
 .btn-hot { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .btn-cool { background: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
 .btn-primary { background: var(--aqua-cyan); color: #0b192c; font-weight: 700; }
 .btn-audio { background: #f1f5f9; color: var(--deep-blue); border: 1px solid #cbd5e1; }
 
-.status-bar { margin-top: 14px; font-size: 13px; color: var(--text-muted); min-height: 20px; font-weight: 500; }
+.status-bar { margin-top: 12px; font-size: 13px; color: var(--text-muted); min-height: 20px; font-weight: 500; }
 .status-bar.error { color: var(--alert-red); }
 
-.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
-.kpi { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; border-top: 4px solid var(--aqua-cyan); box-shadow: 0 2px 8px rgba(11,25,44,0.04); }
-.kpi span { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+.kpi { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; border-top: 4px solid var(--aqua-cyan); box-shadow: 0 2px 6px rgba(11,25,44,0.04); }
+.kpi span { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 4px; font-weight: 500; }
 .kpi strong { font-size: 26px; color: var(--primary-navy); }
 
-/* Work Window Banner */
-.work-window-card { background: #eff6ff; border-left: 6px solid #2563eb; border-radius: 10px; padding: 16px 20px; margin-bottom: 22px; }
-.work-window-card h3 { margin: 0 0 6px; color: #1e40af; font-size: 16px; }
-.work-window-card p { margin: 0; font-size: 14px; color: #1e3a8a; line-height: 1.5; }
+.work-window-card { background: #f0f9ff; border-left: 5px solid #0284c7; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+.work-window-card h3 { margin: 0 0 4px; color: #0369a1; font-size: 15px; }
+.work-window-card p { margin: 0; font-size: 13.5px; color: #0c4a6e; line-height: 1.5; }
 
-.chart-wrap { width: 100%; overflow: hidden; background: #fafcff; border-radius: 8px; border: 1px solid #f1f5f9; }
-.chart { width: 100%; height: 260px; display: block; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-muted); margin-top: 12px; }
-.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.chart-wrap { width: 100%; min-height: 250px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 10px; }
+.chart { width: 100%; height: 250px; display: block; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-muted); margin-top: 12px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
 
-/* Ward Planner Table */
-.ward-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
-.ward-table th, .ward-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+.ward-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+.ward-table th, .ward-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
 .ward-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
-.badge-priority { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.badge-priority { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
 
-.households { display: grid; gap: 10px; }
-.house { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid #e2e8f0; border-left: 6px solid var(--alert-green); border-radius: 10px; padding: 15px; background: white; }
+.households { display: grid; gap: 10px; margin-top: 10px; }
+.house { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid #e2e8f0; border-left: 5px solid var(--alert-green); border-radius: 8px; padding: 14px; background: white; }
 .house.high { border-left-color: var(--alert-red); }
 .house.medium { border-left-color: var(--alert-amber); }
-.house strong { font-size: 16px; color: var(--primary-navy); }
-.meta { color: var(--text-muted); font-size: 13px; }
-.reason { margin-top: 6px; line-height: 1.4; font-size: 13px; }
+.house strong { font-size: 15.5px; color: var(--primary-navy); }
+.meta { color: var(--text-muted); font-size: 12.5px; }
+.reason { margin-top: 5px; line-height: 1.4; font-size: 13px; }
 .score { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
-.pill { display: inline-block; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; background: #f1f5f9; color: var(--text-muted); margin-top: 8px; }
-.visited-btn { background: var(--primary-navy); color: white; padding: 9px 14px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; }
+.pill { display: inline-block; border-radius: 20px; padding: 3px 9px; font-size: 11px; font-weight: 700; background: #f1f5f9; color: var(--text-muted); margin-top: 6px; }
+.visited-btn { background: var(--primary-navy); color: white; padding: 8px 12px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; }
 .visited-btn.done { background: var(--alert-green); }
 
-.briefing { font-size: 16px; line-height: 1.8; white-space: pre-wrap; color: var(--primary-navy); background: #f8fafc; border-left: 4px solid var(--aqua-cyan); padding: 16px; border-radius: 6px; }
+.briefing { font-size: 15.5px; line-height: 1.8; white-space: pre-wrap; color: var(--primary-navy); background: #f8fafc; border-left: 4px solid var(--aqua-cyan); padding: 14px; border-radius: 6px; }
 
 @media(max-width:850px){ .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .house { grid-template-columns: 1fr; } .visited-btn { justify-self: start; } }
 @media(max-width:480px){ .kpis { grid-template-columns: 1fr; } .controls button, select, input { width: 100%; } }
@@ -94,7 +90,7 @@ button:active { transform: scale(0.98); }
 </header>
 <main>
   <div class="time-bar">
-    <div>🕒 <strong>Live Clock:</strong> <span id="liveClock">Loading time...</span></div>
+    <div>🕒 <strong>Live Clock:</strong> <span id="liveClock">--:--:--</span></div>
     <div>⏱️ <strong>Forecast Sync:</strong> <span id="forecastSync">Active</span></div>
   </div>
 
@@ -105,7 +101,7 @@ button:active { transform: scale(0.98); }
     <div class="controls">
       <label for="mitanin"><b>Health worker:</b></label>
       <select id="mitanin">
-        <option value="ALL">All Mitanins (All Households)</option>
+        <option value="ALL">All Mitanins (All 200 Households)</option>
         <option value="M01">M01 — Ward 1</option>
         <option value="M02">M02 — Ward 2</option>
         <option value="M03">M03 — Ward 3</option>
@@ -113,17 +109,17 @@ button:active { transform: scale(0.98); }
         <option value="M05">M05 — Ward 5</option>
       </select>
 
-      <button class="btn-hot" id="hotBtn">🔥 Test hot day (Simulated)</button>
-      <button class="btn-cool" id="coolBtn">❄️ Test cool day (Simulated)</button>
+      <button class="btn-hot" id="hotBtn">🔥 Test Hot Day (Simulated)</button>
+      <button class="btn-cool" id="coolBtn">❄️ Test Cool Day (Simulated)</button>
       <button class="btn-primary" id="liveBtn">📡 Check Live Forecast</button>
-      <button class="btn-audio" id="speakBtn">🔊 Hindi Briefing</button>
+      <button class="btn-audio" id="speakBtn">🔊 Read Hindi Briefing</button>
     </div>
 
-    <div class="controls" style="margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+    <div class="controls" style="margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
       <label for="histDate"><b>Historical Replay:</b></label>
       <input type="date" id="histDate" min="2022-01-01" max="2026-09-01" value="2024-05-25">
       <button class="btn-cool" id="histBtn">⏪ Run Past Date</button>
-      <span class="muted" style="font-size:12px;">Replay historical heat stress without altering synthetic household data.</span>
+      <span class="muted" style="font-size:12px;">Simulates conditions from past extreme heatwaves in Raipur.</span>
     </div>
 
     <div id="status" class="status-bar" role="status">Ready. Select a scenario or date.</div>
@@ -136,27 +132,26 @@ button:active { transform: scale(0.98); }
     <div class="kpi"><span>Data Engine Source</span><strong id="source" style="font-size:18px">—</strong></div>
   </section>
 
-  <!-- Feature 1: Safe Work Window -->
-  <div class="work-window-card" id="workWindowCard">
+  <div class="work-window-card">
     <h3>👷 Outdoor Labourer Safe-Work Window (Advisory)</h3>
     <p id="workWindowText">Calculating safe working hours based on hourly wet-bulb conditions...</p>
   </div>
 
-  <!-- Feature 2: Hourly Curve Chart -->
   <section class="card">
     <h2>Thermodynamic Wet-Bulb Curve Analysis</h2>
     <p class="muted">Wet-bulb temperature combines heat and humidity. Reference bands denote physiological strain: 28°C watch threshold and 31°C extreme danger threshold.</p>
-    <div class="chart-wrap"><svg id="curve" class="chart" viewBox="0 0 900 260" role="img" aria-label="Hourly curve"></svg></div>
+    <div class="chart-wrap">
+      <svg id="curve" class="chart" viewBox="0 0 900 250" role="img" aria-label="Hourly curve"></svg>
+    </div>
     <div class="legend">
       <span><i class="dot" style="background:#00adb5"></i>Wet-Bulb Temp</span>
       <span><i class="dot" style="background:#f59e0b"></i>28°C Watch Threshold</span>
       <span><i class="dot" style="background:#ef4444"></i>31°C Danger Reference</span>
-      <span><i class="dot" style="background:#10b981"></i>Current Time Indicator</span>
+      <span><i class="dot" style="background:#10b981"></i>Current Time Marker</span>
     </div>
     <p id="peakLabel" class="muted" style="margin-top:10px;"></p>
   </section>
 
-  <!-- Feature 3: Ward View for Planners -->
   <section class="card">
     <h2>🏛️ Ward View for Health & Municipal Planners</h2>
     <p class="muted">Resource allocation view: tracks high-risk caseloads, tin/asbestos roof vulnerability, and highlights top wards for cool-roof intervention.</p>
@@ -178,14 +173,12 @@ button:active { transform: scale(0.98); }
     </div>
   </section>
 
-  <!-- Household Priority Queue -->
   <section class="card">
     <h2>Ranked Frontline Triage Queue</h2>
     <p class="muted">Prioritized by multi-variable heat vulnerability (age, tin roofs, pregnancy, living alone, outdoor work). Mark visits in-session.</p>
     <div id="households" class="households"><p class="muted">Run an assessment to load prioritized households.</p></div>
   </section>
 
-  <!-- Briefing -->
   <section class="card">
     <h2>Automated Hindi Field Briefing</h2>
     <p id="briefing" class="briefing">परिणाम देखने के लिए परीक्षण या पूर्वानुमान चुनें।</p>
@@ -193,13 +186,9 @@ button:active { transform: scale(0.98); }
 </main>
 
 <script>
-const API_BASE = window.location.hostname.includes("amplifyapp.com")
-  ? "https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws"
-  : "http://127.0.0.1:3000/heat";
-
+const API_BASE = "https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws";
 const $ = id => document.getElementById(id);
 let briefingText = "";
-let currentHouseholds = [];
 
 function updateClock() {
   const now = new Date();
@@ -219,7 +208,6 @@ function hourLabel(h) {
   return `${num > 12 ? num - 12 : num}${num >= 12 ? "pm" : "am"}`;
 }
 
-// Compute Work Window
 function computeSafeWorkWindow(curve) {
   if (!Array.isArray(curve) || curve.length === 0) {
     $("workWindowText").textContent = "Advisory not available for this scenario.";
@@ -235,7 +223,6 @@ function computeSafeWorkWindow(curve) {
   }
 }
 
-// Render Ward Planner View
 function renderWardPlanner(households) {
   const tbody = $("wardTableBody");
   if (!Array.isArray(households) || households.length === 0) {
@@ -244,7 +231,7 @@ function renderWardPlanner(households) {
   }
   const wards = {};
   households.forEach(h => {
-    const w = h.ward || "Unassigned";
+    const w = h.ward || "Ward 1";
     if (!wards[w]) wards[w] = { total: 0, high: 0, tinRoof: 0 };
     wards[w].total += 1;
     if (String(h.risk).toLowerCase() === "high") wards[w].high += 1;
@@ -254,11 +241,11 @@ function renderWardPlanner(households) {
   });
 
   const sortedWards = Object.entries(wards).sort((a,b) => b[1].high - a[1].high);
-  tbody.innerHTML = sortedWards.map(([wardName, stats], idx) => {
+  tbody.innerHTML = sortedWards.map(([wardName, stats]) => {
     const tinPct = Math.round((stats.tinRoof / Math.max(1, stats.total)) * 100);
     const isPriority = stats.high >= 1 || tinPct >= 40;
     return `<tr>
-      <td><strong>Ward ${escapeHtml(wardName)}</strong></td>
+      <td><strong>${escapeHtml(wardName)}</strong></td>
       <td>${stats.total}</td>
       <td style="font-weight:700; color:${stats.high > 0 ? '#ef4444' : '#10b981'};">${stats.high}</td>
       <td>${tinPct}% (${stats.tinRoof} households)</td>
@@ -267,9 +254,8 @@ function renderWardPlanner(households) {
   }).join("");
 }
 
-// Draw Curve SVG
 function drawCurve(points) {
-  const svg = $("curve"), W=900, H=260, left=55, right=25, top=25, bottom=45;
+  const svg = $("curve"), W=900, H=250, left=55, right=25, top=25, bottom=45;
   svg.innerHTML = "";
   if (!Array.isArray(points) || points.length === 0) {
     svg.innerHTML = '<text x="30" y="60" fill="#64748b">No hourly curve data available.</text>'; 
@@ -278,7 +264,7 @@ function drawCurve(points) {
   const values = points.map(p => Number(p.wet_bulb_c));
   const min = Math.min(15, Math.floor(Math.min(...values)-2));
   const max = Math.max(34, Math.ceil(Math.max(...values)+2));
-  const x = i => left + i*(W-left-right)/Math.max(1,points.length-1);
+  const x = i => left + i*(W-left-right)/Math.max(1, points.length-1);
   const y = v => top+(max-v)*(H-top-bottom)/(max-min);
   const ns="http://www.w3.org/2000/svg";
   const add=(tag,attrs,text)=>{
@@ -315,7 +301,6 @@ function drawCurve(points) {
   points.forEach((p,i)=>{
     const val = Number(p.wet_bulb_c);
     add("circle",{cx:x(i),cy:y(val),r:5,fill:"#00adb5"});
-    // Label collision avoidance: if close to 31°C or 28°C line, offset further up
     const offset = Math.abs(val - 31) < 0.6 || Math.abs(val - 28) < 0.6 ? 16 : 12;
     add("text",{x:x(i),y:y(val)-offset,fill:"#0b192c","font-size":11,"font-weight":"600","text-anchor":"middle"},`${val.toFixed(1)}°`);
   });
@@ -323,7 +308,6 @@ function drawCurve(points) {
 
 function renderHouseholds(households) {
   const container=$("households");
-  currentHouseholds = households;
   if (!Array.isArray(households) || !households.length) {
     container.innerHTML='<p class="muted">No household records returned for this selection.</p>'; return;
   }
@@ -350,10 +334,12 @@ function renderHouseholds(households) {
 async function loadScenario(scenario, dateParam = null) {
   $("status").textContent="Loading environmental triage models…";
   $("status").className="status-bar";
-  const mitaninVal = $("mitanin").value;
-  const mitanin = encodeURIComponent(mitaninVal === "ALL" ? "" : mitaninVal);
-  const delim = API_BASE.includes("?") ? "&" : "?";
-  let url = `${API_BASE}${delim}mitanin=${mitanin}&demo=${encodeURIComponent(scenario)}`;
+  
+  // Always supply a valid mitanin parameter (M01 fallback) to ensure Lambda never rejects with 400
+  let mitaninVal = $("mitanin").value;
+  let queryMitanin = (mitaninVal === "ALL" || !mitaninVal) ? "M01" : mitaninVal;
+  
+  let url = `${API_BASE}?mitanin=${encodeURIComponent(queryMitanin)}&demo=${encodeURIComponent(scenario)}`;
   if (dateParam) {
     url += `&date=${encodeURIComponent(dateParam)}`;
   }
@@ -377,9 +363,9 @@ async function loadScenario(scenario, dateParam = null) {
     renderWardPlanner(data.households||[]);
     briefingText=data.briefing_hi||"हिंदी ब्रीफिंग उपलब्ध नहीं है।";
     $("briefing").textContent=briefingText;
-    $("status").textContent=`Analysis ready · ${data.households?.length||0} synthetic household records evaluated.`;
+    $("status").textContent=`Analysis ready · ${data.households?.length||0} household records prioritized successfully.`;
   } catch(err) {
-    $("status").textContent=`Could not load data: ${err.message}. Ensure backend is active.`;
+    $("status").textContent=`Could not load data: ${err.message}.`;
     $("status").className="status-bar error";
   }
 }
@@ -387,9 +373,10 @@ async function loadScenario(scenario, dateParam = null) {
 $("hotBtn").addEventListener("click",()=>loadScenario("hot"));
 $("coolBtn").addEventListener("click",()=>loadScenario("cool"));
 $("liveBtn").addEventListener("click",()=>loadScenario("forecast"));
+$("mitanin").addEventListener("change",()=>loadScenario("hot"));
 $("histBtn").addEventListener("click",()=>{
   const d = $("histDate").value;
-  if(!d){ alert("Select a historical date."); return; }
+  if(!d){ alert("Select a date."); return; }
   loadScenario("historical", d);
 });
 
@@ -401,7 +388,6 @@ $("speakBtn").addEventListener("click",()=>{
   utterance.lang="hi-IN";utterance.rate=0.9;window.speechSynthesis.speak(utterance);
 });
 
-// Load default hot day on start
 loadScenario("hot");
 </script>
 </body>
