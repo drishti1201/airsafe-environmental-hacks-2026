@@ -26,19 +26,35 @@ Frontend: Single-page dashboard with zero framework overhead, canvas-based heat 
 
 
 Project Structureairsafe-environmental-hacks-2026/
+
 |-- data/
+
 |   |-- generate_households.py   # Synthetic household generation script
+
 |   `-- households.json          # Household demographic and housing risk dataset
+
 |-- infra/
+
 |   |-- DEPLOY.md                # Infrastructure deployment instructions
+
 |   `-- build.sh                 # Lambda packaging and deployment bundle script
+
 |-- src/
+
 |   |-- lambda/
+
 |   |   `-- handler.py           # Lambda entry point, route routing, and briefing generation
+
 |   |-- risk/
+
 |   |   |-- scoring.py           # Household vulnerability matrix calculation
+
 |   |   `-- wetbulb.py           # Wet-bulb temperature formulas & curve modeling
+
 |   `-- web/
+
 |       `-- index.html           # Interactive Mitanin Heat Desk frontend dashboard
+
 `-- tests/
+
     `-- test_risk.py             # Unit tests for scoring and threshold algorithms
