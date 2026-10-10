@@ -63,7 +63,9 @@ button:hover { opacity: 0.9; }
 .ward-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
 .ward-table th, .ward-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
 .ward-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
-.badge-priority { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.badge-p1 { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.badge-p2 { background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.badge-p3 { background: #e0f2fe; color: #075985; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
 
 .households { display: grid; gap: 10px; margin-top: 10px; }
 .house { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid #e2e8f0; border-left: 5px solid var(--alert-green); border-radius: 8px; padding: 14px; background: white; }
@@ -117,9 +119,9 @@ button:hover { opacity: 0.9; }
 
     <div class="controls" style="margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
       <label for="histDate"><b>Historical Replay:</b></label>
-      <input type="date" id="histDate" min="2022-01-01" value="2024-05-25" id="histDate">
+      <input type="date" id="histDate" min="2022-01-01" value="2024-05-25">
       <button class="btn-cool" id="histBtn">⏪ Run Past Date</button>
-      <span class="muted" style="font-size:12px;">Simulates conditions from past extreme heatwaves in Raipur.</span>
+      <span class="muted" style="font-size:12px;">Replays historical weather for the selected date.</span>
     </div>
 
     <div id="status" class="status-bar" role="status">Ready. Select a scenario or date.</div>
@@ -154,13 +156,13 @@ button:hover { opacity: 0.9; }
 
   <section class="card">
     <h2>🏛️ Ward View for Health & Municipal Planners</h2>
-    <p class="muted">Resource allocation view: tracks high-risk caseloads, tin/asbestos roof vulnerability, and highlights top wards for cool-roof intervention.</p>
+    <p class="muted">Resource allocation view: tracks high-risk caseloads, tin/asbestos roof vulnerability, and ranks wards for cool-roof prioritization.</p>
     <div style="overflow-x: auto;">
       <table class="ward-table">
         <thead>
           <tr>
             <th>Ward</th>
-            <th>Total Demo Households</th>
+            <th>Households Analyzed</th>
             <th>High-Risk Count</th>
             <th>Tin / Asbestos Roof Share</th>
             <th>Cool-Roof Priority</th>
@@ -199,6 +201,10 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Set date picker max to today
+const todayIso = new Date().toISOString().split("T")[0];
+if ($("histDate")) $("histDate").max = todayIso;
+
 function escapeHtml(val) {
   return String(val ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
@@ -208,6 +214,7 @@ function hourLabel(h) {
   return `${num > 12 ? num - 12 : num}${num >= 12 ? "pm" : "am"}`;
 }
 
+// 3. Safe work window accurate to data limits
 function computeSafeWorkWindow(curve) {
   if (!Array.isArray(curve) || curve.length === 0) {
     $("workWindowText").textContent = "Advisory not available for this scenario.";
@@ -218,11 +225,12 @@ function computeSafeWorkWindow(curve) {
     $("workWindowText").innerHTML = "<strong>✅ Low Heat Stress:</strong> Safe for normal outdoor labour schedules throughout daylight hours. Maintain routine hydration.";
   } else {
     const startDanger = Math.min(...dangerHours);
-    const endDanger = Math.max(...dangerHours) + 1;
-    $("workWindowText").innerHTML = `<strong>⚠️ Extreme Heat Advisory:</strong> Recommend outdoor work <strong>6:00 AM to ${hourLabel(startDanger)}</strong>. Mandatory rest and indoor shade between <strong>${hourLabel(startDanger)} and ${hourLabel(endDanger)}</strong>. Resume after <strong>${hourLabel(endDanger)}</strong>.`;
+    const endDanger = Math.max(...dangerHours);
+    $("workWindowText").innerHTML = `<strong>⚠️ Heat Advisory:</strong> Outdoor work recommended <strong>before ${hourLabel(startDanger)}</strong> (outside modeled peak window). <strong>Suggested operational rest</strong> from <strong>${hourLabel(startDanger)} to ${hourLabel(endDanger)}</strong> (wet-bulb $\\ge$ 28°C watch threshold). Resume outdoor activity after <strong>${hourLabel(endDanger)}</strong>.`;
   }
 }
 
+// 2. Differentiated Ward View ranking
 function renderWardPlanner(households) {
   const tbody = $("wardTableBody");
   if (!Array.isArray(households) || households.length === 0) {
@@ -231,29 +239,45 @@ function renderWardPlanner(households) {
   }
   const wards = {};
   households.forEach(h => {
-    const w = h.ward || "Ward 1";
+    const w = h.ward ? `Ward ${h.ward}` : "Unassigned";
     if (!wards[w]) wards[w] = { total: 0, high: 0, tinRoof: 0 };
     wards[w].total += 1;
     if (String(h.risk).toLowerCase() === "high") wards[w].high += 1;
-    if ((h.reason_en || "").toLowerCase().includes("tin") || (h.reason_en || "").toLowerCase().includes("roof")) {
+    const r = (h.reason_en || "").toLowerCase();
+    if (r.includes("tin") || r.includes("roof") || r.includes("asbestos")) {
       wards[w].tinRoof += 1;
     }
   });
 
-  const sortedWards = Object.entries(wards).sort((a,b) => b[1].high - a[1].high);
-  tbody.innerHTML = sortedWards.map(([wardName, stats]) => {
-    const tinPct = Math.round((stats.tinRoof / Math.max(1, stats.total)) * 100);
-    const isPriority = stats.high >= 1 || tinPct >= 40;
+  const wardArray = Object.entries(wards).map(([name, s]) => {
+    const tinPct = Math.round((s.tinRoof / Math.max(1, s.total)) * 100);
+    // Composite ranking score: high-risk count weighted with tin share
+    const score = (s.high * 10) + (tinPct * 0.1);
+    return { name, total: s.total, high: s.high, tinRoof: s.tinRoof, tinPct, score };
+  });
+
+  // Sort descending by score
+  wardArray.sort((a,b) => b.score - a.score);
+
+  tbody.innerHTML = wardArray.map((w, idx) => {
+    let badge = '<span class="badge-p3">Priority 3: Standard</span>';
+    if (idx < 2) {
+      badge = '<span class="badge-p1">Priority 1: Immediate Cool-Roof</span>';
+    } else if (idx < 4) {
+      badge = '<span class="badge-p2">Priority 2: Secondary Target</span>';
+    }
+    const sampleNote = w.total <= 5 ? ' <small style="color:#94a3b8;">(small sample)</small>' : '';
     return `<tr>
-      <td><strong>${escapeHtml(wardName)}</strong></td>
-      <td>${stats.total}</td>
-      <td style="font-weight:700; color:${stats.high > 0 ? '#ef4444' : '#10b981'};">${stats.high}</td>
-      <td>${tinPct}% (${stats.tinRoof} households)</td>
-      <td>${isPriority ? '<span class="badge-priority">Priority 1: Cool-Roof Candidate</span>' : '<span style="color:#64748b;">Standard Monitoring</span>'}</td>
+      <td><strong>${escapeHtml(w.name)}</strong>${sampleNote}</td>
+      <td>${w.total}</td>
+      <td style="font-weight:700; color:${w.high > 0 ? '#ef4444' : '#10b981'};">${w.high}</td>
+      <td>${w.tinPct}% (${w.tinRoof} households)</td>
+      <td>${badge}</td>
     </tr>`;
   }).join("");
 }
 
+// 5. Chart with collision prevention at 29.0° / 31°C
 function drawCurve(points) {
   const svg = $("curve"), W=900, H=250, left=55, right=25, top=25, bottom=45;
   svg.innerHTML = "";
@@ -300,9 +324,13 @@ function drawCurve(points) {
 
   points.forEach((p,i)=>{
     const val = Number(p.wet_bulb_c);
-    add("circle",{cx:x(i),cy:y(val),r:5,fill:"#00adb5"});
-    const offset = Math.abs(val - 31) < 0.6 || Math.abs(val - 28) < 0.6 ? 16 : 12;
-    add("text",{x:x(i),y:y(val)-offset,fill:"#0b192c","font-size":11,"font-weight":"600","text-anchor":"middle"},`${val.toFixed(1)}°`);
+    const py = y(val);
+    add("circle",{cx:x(i),cy:py,r:5,fill:"#00adb5"});
+    
+    // Collision fix: if near 28.5 to 30.5°C (near the 28°/31° lines), position label BELOW the dot
+    const isNearReference = val >= 28.2 && val <= 30.5;
+    const textY = isNearReference ? py + 16 : py - 10;
+    add("text",{x:x(i),y:textY,fill:"#0b192c","font-size":11,"font-weight":"700","text-anchor":"middle"},`${val.toFixed(1)}°`);
   });
 }
 
@@ -331,18 +359,73 @@ function renderHouseholds(households) {
   }));
 }
 
-async function loadScenario(scenario, dateParam = null) {
+// Thermodynamic Stull Wet-Bulb approximation for client-side historical calculation
+function calcWetBulb(T, RH) {
+  return T * Math.atan(0.151977 * Math.pow(RH + 8.313659, 0.5)) +
+    Math.atan(T + RH) - Math.atan(RH - 1.676331) +
+    0.00391838 * Math.pow(RH, 1.5) * Math.atan(0.023101 * RH) - 4.686035;
+}
+
+// 4. Historical weather fetch directly from Open-Meteo Archive
+async function runHistoricalReplay(dateStr) {
+  $("status").textContent=`Querying Open-Meteo historical archive for ${dateStr}…`;
+  $("status").className="status-bar";
+  try {
+    const lat = 21.25, lon = 81.63; // Raipur
+    const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&hourly=temperature_2m,relative_humidity_2m&timezone=Asia%2FKolkata`;
+    const res = await fetch(archiveUrl);
+    const wData = await res.json();
+    if (!wData.hourly) throw new Error("No archive data returned for date.");
+
+    // Extract hours 9 to 17
+    const temps = wData.hourly.temperature_2m.slice(9, 18);
+    const rhs = wData.hourly.relative_humidity_2m.slice(9, 18);
+    const curve = temps.map((t, i) => {
+      const wb = Math.round(calcWetBulb(t, rhs[i]) * 10) / 10;
+      return { hour: 9 + i, temp_c: t, wet_bulb_c: wb };
+    });
+
+    const maxTemp = Math.max(...temps);
+    const maxWb = Math.max(...curve.map(c => c.wet_bulb_c));
+    const peakHour = curve.find(c => c.wet_bulb_c === maxWb)?.hour || 13;
+
+    // Use current baseline households and rescale risk scores for historical peak
+    const baseResp = await fetch(`${API_BASE}?mitanin=ALL&demo=cool`);
+    const baseJson = await baseResp.json();
+    const households = (baseJson.households || []).map(h => {
+      const isHigh = maxWb >= 29.5 && ((h.reason_en||"").toLowerCase().includes("tin") || (h.reason_en||"").toLowerCase().includes("roof") || h.score > 60);
+      return { ...h, risk: isHigh ? "High" : (maxWb >= 27.5 ? "Medium" : "Low") };
+    });
+
+    $("temp").textContent = `${maxTemp} °C`;
+    $("wetbulb").textContent = `${maxWb} °C`;
+    $("high").textContent = households.filter(h => h.risk === "High").length;
+    $("source").textContent = `Archive (${dateStr})`;
+    $("peakLabel").textContent = `Historical Peak: ${maxWb}°C at ${hourLabel(peakHour)} · Historical Replay`;
+
+    drawCurve(curve);
+    computeSafeWorkWindow(curve);
+    renderHouseholds(households);
+    renderWardPlanner(households);
+
+    briefingText = `ऐतिहासिक मौसम डेटा: ${dateStr} को रायपुर में अधिकतम वेट-बल्ब तापमान ${maxWb} डिग्री सेल्सियस दर्ज किया गया था। इस स्थिति में उच्च जोखिम वाले घरों को तुरंत ओआरएस और सुरक्षा की आवश्यकता होती है।`;
+    $("briefing").textContent = briefingText;
+    $("status").textContent = `Historical replay loaded for ${dateStr} · 200 synthetic households evaluated against archived records.`;
+  } catch(err) {
+    $("status").textContent = `Historical archive failed: ${err.message}.`;
+    $("status").className = "status-bar error";
+  }
+}
+
+// 1. Fixed loadScenario to query ALL 200 households properly
+async function loadScenario(scenario) {
   $("status").textContent="Loading environmental triage models…";
   $("status").className="status-bar";
   
-  // Always supply a valid mitanin parameter (M01 fallback) to ensure Lambda never rejects with 400
-  let mitaninVal = $("mitanin").value;
-  let queryMitanin = (mitaninVal === "ALL" || !mitaninVal) ? "M01" : mitaninVal;
-  
-  let url = `${API_BASE}?mitanin=${encodeURIComponent(queryMitanin)}&demo=${encodeURIComponent(scenario)}`;
-  if (dateParam) {
-    url += `&date=${encodeURIComponent(dateParam)}`;
-  }
+  const mitaninVal = $("mitanin").value;
+  // Send "ALL" or specific ID
+  const queryMitanin = mitaninVal;
+  const url = `${API_BASE}?mitanin=${encodeURIComponent(queryMitanin)}&demo=${encodeURIComponent(scenario)}`;
 
   try {
     const response=await fetch(url);
@@ -352,7 +435,7 @@ async function loadScenario(scenario, dateParam = null) {
     $("temp").textContent=`${a.peak_temp_c ?? "—"} °C`;
     $("wetbulb").textContent=`${a.peak_wet_bulb_c ?? "—"} °C`;
     $("high").textContent=(data.households||[]).filter(h=>String(h.risk).toLowerCase()==="high").length;
-    $("source").textContent=dateParam ? `Historical Archive (${dateParam})` : (data.forecast_source==="simulated" ? "Simulated Baseline" : (data.forecast_source||"Open-Meteo API"));
+    $("source").textContent=data.forecast_source==="simulated" ? "Simulated Baseline" : (data.forecast_source||"Open-Meteo API");
     $("peakLabel").textContent=`Peak Wet-Bulb: ${a.peak_wet_bulb_c ?? "—"}°C at ${hourLabel(a.peak_hour ?? 13)} · Severity Rating: ${a.severity ?? "—"}`;
     
     $("forecastSync").textContent = `Sync: ${new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"})} IST · Evaluated`;
@@ -374,15 +457,11 @@ $("hotBtn").addEventListener("click",()=>loadScenario("hot"));
 $("coolBtn").addEventListener("click",()=>loadScenario("cool"));
 $("liveBtn").addEventListener("click",()=>loadScenario("forecast"));
 $("mitanin").addEventListener("change",()=>loadScenario("hot"));
+
 $("histBtn").addEventListener("click",()=>{
   const d = $("histDate").value;
   if(!d){ alert("Select a date."); return; }
-  const today = new Date().toISOString().split("T")[0];
-  if(d >= today) {
-    loadScenario("forecast");
-  } else {
-    loadScenario("historical", d);
-  }
+  runHistoricalReplay(d);
 });
 
 $("speakBtn").addEventListener("click",()=>{
@@ -392,14 +471,6 @@ $("speakBtn").addEventListener("click",()=>{
   const utterance=new SpeechSynthesisUtterance(briefingText);
   utterance.lang="hi-IN";utterance.rate=0.9;window.speechSynthesis.speak(utterance);
 });
-
-
-  // Dynamically allow dates up to today
-  const todayStr = new Date().toISOString().split("T")[0];
-  const dateInput = $("histDate");
-  if (dateInput) {
-    dateInput.max = todayStr;
-  }
 
 loadScenario("hot");
 </script>
