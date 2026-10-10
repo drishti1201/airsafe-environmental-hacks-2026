@@ -167,7 +167,7 @@
     // 3. Peak Notice & Wet-bulb Curve Chart
     if (data.analysis) {
       document.getElementById("peakNotice").textContent = 
-        `Peak: ${data.analysis.peak_wetbulb}°C at ${data.analysis.peak_hour}:00 IST`;
+        `Peak: ${data.analysis.peak_wet_bulb_c}°C at ${data.analysis.peak_hour}:00 IST`;
       drawCurve(data.analysis.curve);
     }
 
@@ -175,14 +175,14 @@
     const listContainer = document.getElementById("householdsContainer");
     listContainer.innerHTML = "";
 
-    (data.ranked || []).forEach(item => {
+    (data.households || data.ranked || []).forEach(item => {
       const card = document.createElement("div");
       const riskClass = item.risk === "High" ? "item-high" : (item.risk === "Medium" ? "item-medium" : "item-low");
       card.className = `household-item ${riskClass}`;
 
       card.innerHTML = `
         <div class="household-info">
-          <h4>Household #${item.id} <span style="font-size:0.8rem; font-weight:normal; color:#64748b;">(Score: ${item.score})</span></h4>
+          <h4>${item.name || ("Household #" + item.id)} (Ward ${item.ward || ""}) <span style="font-size:0.8rem; font-weight:normal; color:#64748b;">(Score: ${item.score})</span></h4>
           <p><strong>Reason:</strong> ${item.reason_en}</p>
           <p style="font-size: 0.8rem; color: #475569; margin-top:2px;">${item.reason_hi || ''}</p>
         </div>
@@ -257,7 +257,7 @@
     ctx.lineWidth = 3;
     curve.forEach((pt, i) => {
       const x = getX(i);
-      const y = getY(pt.wetbulb);
+      const y = getY(pt.wet_bulb_c);
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     });
@@ -266,7 +266,7 @@
     // Data points & X axis labels
     curve.forEach((pt, i) => {
       const x = getX(i);
-      const y = getY(pt.wetbulb);
+      const y = getY(pt.wet_bulb_c);
       ctx.fillStyle = "#2563eb";
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, Math.PI * 2);
