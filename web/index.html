@@ -37,7 +37,16 @@ select,button{font:inherit;border-radius:9px;padding:12px 15px}select{border:1px
     <p class="muted">Compare simulated hot and cool conditions, see why households are prioritised, and prepare a Hindi field briefing. Household records are synthetic demo data, not real patient records.</p>
     <div class="controls">
       <label for="mitanin"><b>Health worker:</b></label>
-      <select id="mitanin"><option value="M01">Mitanin M01</option></select>
+      
+      <select id="mitanin">
+        <option value="ALL">All Mitanins — All 200 households</option>
+        <option value="M01">M01 — Ward 1</option>
+        <option value="M02">M02 — Ward 2</option>
+        <option value="M03">M03 — Ward 3</option>
+        <option value="M04">M04 — Ward 4</option>
+        <option value="M05">M05 — Ward 5</option>
+      </select>
+
       <button class="hot" id="hotBtn">🔥 Test hot day</button>
       <button class="cool" id="coolBtn">❄️ Test cool day</button>
       <button class="primary" id="liveBtn">Check forecast</button>

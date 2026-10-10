@@ -172,7 +172,10 @@ def handler(event, context=None):
         else:
             forecast, source = fetch_tomorrow_forecast(), "open-meteo"
 
-        analysis, ranked = rank_households(_households(), forecast, mitanin_id=mitanin)
+        selected_mitanin = None if mitanin == "ALL" else mitanin
+        analysis, ranked = rank_households(
+            _households(), forecast, mitanin_id=selected_mitanin
+        )
         briefing = build_briefing_hi(analysis, ranked)
         return _resp(
             200,
