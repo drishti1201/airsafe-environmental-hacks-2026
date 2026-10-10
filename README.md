@@ -1,109 +1,234 @@
-Mitanin Heat Desk
-A heat-risk decision-support tool for community health workers.
+# Mitanin Heat Desk 🌡️
+### Predictive Wet-Bulb Triage & Automated Voice Briefing System for Community Health Workers
 
-Problem
-Extreme heat can put vulnerable households at risk. Community health workers need a practical way to identify which households may need attention first.
+**Built for Environmental Hacks 2026 | Raipur, Chhattisgarh, India**
 
-Our Solution
-Mitanin Heat Desk estimates heat stress and ranks demonstration households by their potential heat risk, helping health workers prioritize visits during hot weather.
+Mitanin Heat Desk is a **heat-risk decision-support tool** designed to help community health workers (Mitanins) identify and prioritize households that may be more vulnerable during extreme heat events.
 
-How It Works
-Retrieves tomorrow's weather forecast from Open-Meteo.
-Estimates wet-bulb temperature using air temperature and humidity.
-Calculates heat-risk severity and ranks synthetic households by priority.
-Generates a Hindi field briefing, with browser-based speech playback.
-Includes optional Amazon Polly, S3 audio storage, and DynamoDB visit logging when configured.
-Technology Stack
-Python
-AWS Lambda
-AWS SAM CLI for local development and testing
-Open-Meteo API
-HTML, CSS, and JavaScript
-Browser Speech Synthesis API
-Amazon Polly and S3 (optional audio generation and storage)
-Amazon DynamoDB (optional visit logging)
-Testing and Deployment
-The local heat-risk tests have passed. AWS deployment and live end-to-end functionality are still being verified.
+By combining weather forecasts, wet-bulb temperature estimation, household vulnerability scoring, and Hindi voice briefings, the system helps frontline health workers plan timely visits and take preventive action.
 
-Data Disclaimer
-Household records are synthetic demonstration data. They do not represent real households or patients. Risk scores are estimates for decision support and must not replace official heat-health guidance or professional judgment.
+---
 
-Security
-The public demonstration endpoint, if enabled, is intended for synthetic data only. Do not upload personal household information or AWS credentials to this repository.
+## 🎯 The Challenge
 
-Predictive Wet-Bulb Triage & Automated Voice Briefing System for Community Health Workers in Raipur, Chhattisgarh. Built for the Environmental Hacks 2026 Hackathon.   
+Extreme heat poses serious health risks, particularly during pre-monsoon heat events in central India. High temperatures combined with humidity can increase heat stress, potentially leading to heat exhaustion, heatstroke, and cardiovascular complications.
 
-Live Links & DeploymentLive Web Application (AWS Amplify): https://main.d2e9o4nf8jvnh9.amplifyapp.comLive Serverless Backend API (AWS Lambda Function URL): https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws/?mitanin=M01&demo=hot   
+Community health workers often monitor hundreds of households, including older adults living alone, infants in poorly insulated homes, and outdoor workers. Without a practical prioritization system, identifying households that need attention first can be challenging.
 
-GitHub Repository: https://github.com/harshita-k24/airsafe-environmental-hacks-2026   
+**The goal:** Enable health workers to make informed, data-driven decisions about which households may require attention during extreme heat events.
 
-The ChallengeDuring extreme pre-monsoon heat events in central India, high dry-bulb temperatures combine with high humidity, pushing the Wet-Bulb Temperature past critical physiological thresholds (>31°C). At these levels, the human body cannot cool itself through evaporative sweating, leading to acute heat exhaustion, heat stroke, and cardiovascular distress.Frontline community health workers (Mitanins) monitor hundreds of households across urban slums and informal settlements. Without localized, data-driven prioritization, vulnerable residents—especially elders living alone, infants under uninsulated tin or asbestos roofs, and outdoor laborers—cannot be reached in time before peak afternoon heat hits.   
+## 💡 Our Solution
 
-The SolutionMitanin Heat Desk provides a triage engine that delivers daily action plans directly to health workers:   
+**Mitanin Heat Desk** provides a predictive triage dashboard that estimates heat stress, ranks demonstration households by potential risk, and generates daily field briefings in Hindi.
 
-Predictive Wet-Bulb Analytics: Evaluates hourly dry-bulb temperature and relative humidity from Open-Meteo forecasts to compute true thermodynamic wet-bulb heat curves and severity tiers.   
+### Key Features
 
-Household Vulnerability Scoring Engine: Multiplies wet-bulb severity by a structured vulnerability matrix accounting for:Age (65+ or under 2 years)   Social vulnerability (living alone, no caregiver)   Housing infrastructure (tin or asbestos roofing)   Occupational risk (outdoor/sun exposure)   Chronic health conditions   
+- **Predictive Wet-Bulb Analytics:** Retrieves hourly weather forecasts from Open-Meteo and estimates wet-bulb temperature using air temperature and relative humidity.
+- **Household Vulnerability Scoring:** Evaluates synthetic household profiles using age, social vulnerability, housing conditions, occupational exposure, and chronic health conditions.
+- **Risk-Based Prioritization:** Combines estimated heat severity with household vulnerability factors to rank households for potential follow-up.
+- **Automated Hindi Voice Briefings:** Generates concise field briefings with browser-based speech playback and optional Amazon Polly integration.
+- **Interactive Heat Dashboard:** Visualizes heat trends and supports scenario simulations to explore how changing weather conditions may affect estimated risk.
+- **Field Action Tracking:** Supports visit-status updates and ORS packet distribution tracking in the demonstration interface.
+- **AWS Integration:** Uses AWS Amplify for frontend hosting and AWS Lambda for serverless backend processing, with optional Amazon Polly, S3, and DynamoDB integrations.
 
-Automated Hindi Voice Briefing: Generates concise, audio-ready briefings in regional Hindi, summarizing the day's peak heat timeline and prioritized households for field workers on the move.   
+## ⚙️ How It Works
 
-Field Action Tracking: Interactive interface allowing Mitanins to mark visits as completed and track ORS packet distribution in real time[cite: 17].System Architecture               
+1. **Fetch Weather Forecast:** Retrieves tomorrow's hourly weather forecast from Open-Meteo.
+2. **Estimate Wet-Bulb Temperature:** Uses air temperature and relative humidity to estimate wet-bulb conditions.
+3. **Calculate Heat Severity:** Evaluates forecast conditions against configured heat-risk thresholds.
+4. **Score Household Vulnerability:** Assesses synthetic household characteristics to estimate relative vulnerability.
+5. **Prioritize Households:** Ranks demonstration households according to estimated risk.
+6. **Generate Hindi Briefing:** Produces a concise briefing highlighting heat conditions and prioritized households.
+7. **Track Field Actions:** Supports recording demonstration visits and ORS distribution where enabled.
 
+## 🏗️ System Architecture
 
+```text
+        +--------------------------------+
+        |     Mitanin / Health Worker    |
+        |       Mobile or Web Browser    |
+        +----------------+---------------+
+                         |
+                         v
+        +--------------------------------+
+        |       AWS Amplify Hosting      |
+        |      HTML, CSS, JavaScript     |
+        +----------------+---------------+
+                         |
+                         v
+        +--------------------------------+
+        |    AWS Lambda Function URL     |
+        |          Python 3.12           |
+        +----------+-----------+---------+
+                   |           |
+           +-------v------+  +-v-------------------+
+           |  Open-Meteo  |  | Synthetic Household |
+           |  Weather API |  | Vulnerability Data  |
+           +--------------+  +---------------------+
+                   |           |
+                   +-----+-----+
+                         |
+                         v
+        +--------------------------------+
+        | Wet-Bulb Estimation & Risk      |
+        | Scoring Engine                  |
+        +----------------+---------------+
+                         |
+                         v
+        +--------------------------------+
+        | Household Prioritization &      |
+        | Hindi Field Briefing            |
+        +----------------+---------------+
+                         |
+             +-----------+-----------+
+             |           |           |
+             v           v           v
+          Browser    Amazon Polly  DynamoDB
+          Speech     (Optional)    (Optional)
+          Synthesis       |
+                          v
+                       Amazon S3
+                       (Optional)
+```
 
-               +-------------------------------+
-               |    Frontline Health Worker    |
-               |   (Mitanin Mobile / Browser)  |
-               +---------------+---------------+
-                               |
-                AWS Amplify Static Web Hosting
-                               |
-               +---------------v---------------+
-               |   AWS Lambda API Handler      |
-               |        (Python 3.12)          |
-               +-------+---------------+-------+
-                       |               |
-       +---------------+---+       +---+----------------+
-       | Open-Meteo Hourly |       |  Raipur Household  |
-       | Weather Forecast  |       |  Vulnerability DB  |
-       +-------------------+       +--------------------+
+### Architecture Overview
 
+- **Frontend:** Single-page dashboard built with HTML, CSS, and JavaScript, featuring canvas-based heat-curve visualization and scenario controls.
+- **Backend:** Python-based AWS Lambda handler exposed through a Lambda Function URL.
+- **Weather Data:** Open-Meteo hourly forecast API.
+- **Risk Engine:** Python modules for wet-bulb estimation and household vulnerability scoring.
+- **Voice Briefing:** Browser Speech Synthesis API, with optional Amazon Polly integration.
+- **Optional Storage:** Amazon S3 for generated audio and Amazon DynamoDB for visit logs.
+- **Hosting:** AWS Amplify Hosting for the live web application.
 
+## 🛠️ Technology Stack
 
-Frontend: Single-page dashboard with zero framework overhead, canvas-based heat curve visualization, and real-time scenario simulation controls[cite: 20].Hosting: AWS Amplify Hosting.Backend: AWS Lambda Function URL (ap-southeast-2) with CORS enabled[cite: 5, 18].Audio Synthesis: AWS Polly (Hindi Voice engine).
+| Component | Technology |
+|---|---|
+| Programming Language | Python 3.12 |
+| Frontend | HTML, CSS, JavaScript |
+| Frontend Hosting | AWS Amplify |
+| Backend | AWS Lambda |
+| Backend API | AWS Lambda Function URL |
+| Weather Forecast | Open-Meteo API |
+| Wet-Bulb Estimation | Python |
+| Risk Scoring | Python |
+| Browser Voice Playback | Web Speech API |
+| Optional Voice Generation | Amazon Polly |
+| Optional Audio Storage | Amazon S3 |
+| Optional Visit Logging | Amazon DynamoDB |
+| Development & Deployment | AWS SAM CLI, AWS CLI |
+| Testing | Python unit tests, pytest-compatible test structure |
 
+## 📁 Project Structure
 
+```text
+airsafe-environmental-hacks-2026/
+│
+├── data/
+│   ├── generate_households.py
+│   └── households.json
+│
+├── infra/
+│   ├── DEPLOY.md
+│   └── build.sh
+│
+├── src/
+│   ├── lambda/
+│   │   └── handler.py
+│   │
+│   ├── risk/
+│   │   ├── scoring.py
+│   │   └── wetbulb.py
+│   │
+│   └── web/
+│       └── index.html
+│
+└── tests/
+    └── test_risk.py
+```
 
-Project Structureairsafe-environmental-hacks-2026/
+### Important Files
 
-|-- data/
+- `data/generate_households.py` — Generates synthetic household demonstration data.
+- `data/households.json` — Contains synthetic demographic and housing-risk attributes.
+- `infra/DEPLOY.md` — Provides infrastructure deployment instructions.
+- `infra/build.sh` — Prepares the backend deployment bundle.
+- `src/lambda/handler.py` — Implements the Lambda entry point, request routing, and briefing generation.
+- `src/risk/scoring.py` — Calculates household vulnerability scores.
+- `src/risk/wetbulb.py` — Implements wet-bulb estimation and heat-curve modeling.
+- `src/web/index.html` — Contains the interactive dashboard.
+- `tests/test_risk.py` — Tests risk-scoring and threshold algorithms.
 
-|   |-- generate_households.py   # Synthetic household generation script
+## 🚀 Live Demo & Resources
 
-|   `-- households.json          # Household demographic and housing risk dataset
+- **Live Web Application (AWS Amplify):** [https://main.d2e9o4nf8jvnh9.amplifyapp.com](https://main.d2e9o4nf8jvnh9.amplifyapp.com)
+- **Serverless Backend API (AWS Lambda):** [https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws/?mitanin=M01&demo=hot](https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws/?mitanin=M01&demo=hot)
+- **GitHub Repository:** [https://github.com/harshita-k24/airsafe-environmental-hacks-2026](https://github.com/harshita-k24/airsafe-environmental-hacks-2026)
 
-|-- infra/
+### Deployment Status
 
-|   |-- DEPLOY.md                # Infrastructure deployment instructions
+**The application is deployed on AWS Amplify, with a serverless backend hosted on AWS Lambda and accessible through a Lambda Function URL.** The local heat-risk tests have passed. Optional integrations depend on their respective AWS resources and configuration.
 
-|   `-- build.sh                 # Lambda packaging and deployment bundle script
+## 🧪 Testing & Deployment
 
-|-- src/
+### Local Testing
 
-|   |-- lambda/
+Run the heat-risk tests using Python:
 
-|   |   `-- handler.py           # Lambda entry point, route routing, and briefing generation
+```bash
+python -m pytest tests/test_risk.py
+```
 
-|   |-- risk/
+Ensure Python and the required project dependencies are installed before running the tests.
 
-|   |   |-- scoring.py           # Household vulnerability matrix calculation
+### AWS Deployment
 
-|   |   `-- wetbulb.py           # Wet-bulb temperature formulas & curve modeling
+The project includes deployment instructions and a build script under the `infra/` directory.
 
-|   `-- web/
+- `infra/DEPLOY.md` — Deployment guidance.
+- `infra/build.sh` — Backend packaging script.
+- **AWS SAM CLI** — Supports local development and testing.
 
-|       `-- index.html           # Interactive Mitanin Heat Desk frontend dashboard
+The live frontend and backend deployment are available through the links above. Optional services such as Amazon Polly, S3, and DynamoDB require their respective AWS resources, permissions, and configuration.
 
-`-- tests/
+## 🔒 Security Considerations
 
-    `-- test_risk.py             # Unit tests for scoring and threshold algorithms
+- The public demonstration endpoint is intended for **synthetic demonstration data only**.
+- Do not upload real household, patient, or personally identifiable information.
+- Never commit AWS access keys, secret keys, tokens, or other credentials to the repository.
+- Configure appropriate IAM permissions, access controls, and resource policies before enabling optional AWS services for broader use.
+- Review API access and CORS settings before exposing the service publicly.
+
+## ⚠️ Data Disclaimer & Limitations
+
+- **Synthetic Data:** All household records are synthetic demonstration data and do not represent real households or patients.
+- **Estimated Risk:** Risk scores are estimates intended to support prioritization, not provide a clinical diagnosis.
+- **Decision Support Only:** The tool must not replace official heat-health advisories, established emergency protocols, or professional judgment.
+- **Forecast Limitations:** Weather forecasts and estimated wet-bulb temperatures may differ from actual local conditions.
+- **Threshold Limitations:** Configured risk thresholds should be validated against appropriate scientific and public-health guidance before operational use.
+- **Optional Integrations:** Availability of voice generation, audio storage, and visit logging depends on AWS configuration.
+
+## 🌍 Expected Impact
+
+Mitanin Heat Desk aims to help community health workers:
+
+- **Prioritize outreach** to households with higher estimated heat vulnerability.
+- **Plan visits proactively** using forecast heat conditions.
+- **Improve accessibility** through concise Hindi voice briefings.
+- **Support field coordination** through visit-status and ORS distribution tracking.
+- **Explore preventive interventions** using scenario-based heat-risk assessment.
+
+The long-term vision is to support more proactive, accessible, and data-informed community heat-health preparedness.
+
+## 👥 Built For
+
+**Environmental Hacks 2026 Hackathon**
+
+**Project:** Mitanin Heat Desk — Predictive Wet-Bulb Triage & Automated Voice Briefing System for Community Health Workers.
+
+**Focus Areas:** Environmental health, extreme-heat preparedness, community healthcare, and responsible decision-support technology.
+
+---
+
+**Disclaimer:** This project is a hackathon demonstration and has not been established as a clinically validated or officially approved heat-health triage system.
