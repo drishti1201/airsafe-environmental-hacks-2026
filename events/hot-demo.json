@@ -1,0 +1,12 @@
+{
+  "requestContext": {
+    "http": {
+      "method": "GET"
+    }
+  },
+  "rawPath": "/",
+  "queryStringParameters": {
+    "mitanin": "M01",
+    "demo": "hot"
+  }
+}

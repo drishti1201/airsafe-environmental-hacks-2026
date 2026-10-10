@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mitanin Heat Desk</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f7f5;color:#19332d;font-family:Arial,sans-serif}
+header{background:#164e40;color:white;padding:28px 7%}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;color:#d7eee4}
+main{max-width:1100px;margin:28px auto;padding:0 18px}
+.panel{background:white;border-radius:15px;padding:22px;margin-bottom:20px;box-shadow:0 4px 18px #173e3010}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+select,button{padding:12px 15px;border-radius:8px;border:1px solid #ccd9d3;font-size:15px}
+button{background:#176b50;color:white;border:0;cursor:pointer}
+button.secondary{background:#e1f2e9;color:#16553e}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:20px 0}
+.stat{background:#e5f3ec;border-radius:12px;padding:18px}
+.stat span{display:block;color:#526d61;font-size:13px}
+.stat strong{display:block;font-size:25px;margin-top:8px}
+.note{color:#65766e;font-size:13px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #e5ece8;font-size:14px}
+th{background:#f1f7f3}
+.tag{padding:5px 9px;border-radius:20px;font-weight:bold;font-size:12px}
+.High{background:#ffe1d9;color:#a22d19}
+.Medium{background:#fff0c2;color:#805500}
+.Low{background:#d9f3df;color:#17653a}
+#briefing{line-height:1.9;white-space:pre-wrap}
+@media(max-width:600px){header h1{font-size:24px}.panel{padding:15px}th,td{padding:8px;font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🌿 Mitanin Heat Desk</h1>
+<p>Heat-risk prioritisation for community health workers</p>
+</header>
+
+<main>
+<section class="panel">
+<h2>Tomorrow's heat-risk assessment</h2>
+<p class="note">Explore a simulated hot and humid day to see which households may need attention first. This demo uses synthetic household records, not live patient data.</p>
+<div class="controls">
+<label for="mitanin">Health worker:</label>
+<select id="mitanin">
+<option value="M01">Mitanin M01</option>
+</select>
+<button id="load">Analyse heat risk</button>
+<button id="speak" class="secondary">🔊 Read Hindi briefing</button>
+</div>
+<p id="status" class="note">Ready to analyse.</p>
+</section>
+
+<div class="stats">
+<div class="stat"><span>Peak air temperature</span><strong id="temp">—</strong></div>
+<div class="stat"><span>Peak wet-bulb temperature</span><strong id="wetbulb">—</strong></div>
+<div class="stat"><span>High-risk households</span><strong id="high">—</strong></div>
+<div class="stat"><span>Forecast source</span><strong id="source" style="font-size:17px">—</strong></div>
+</div>
+
+<section class="panel">
+<h2>Priority household list</h2>
+<p class="note">Higher-risk households appear first. Names and records shown here are synthetic demo data.</p>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Priority</th><th>Household</th><th>Ward</th><th>Risk</th><th>Reason</th></tr></thead>
+<tbody id="households"><tr><td colspan="5">Click “Analyse heat risk” to load the demo.</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section class="panel">
+<h2>Hindi field briefing</h2>
+<p id="briefing">आपकी गर्मी-जोखिम रिपोर्ट यहाँ दिखाई जाएगी।</p>
+</section>
+
+<section class="panel">
+<h3>Important note</h3>
+<p class="note">This prototype supports planning and prioritisation. It is not a medical diagnosis or an official heat warning. Confirm conditions locally and follow public-health guidance.</p>
+</section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let briefingText = "";
+
+async function analyse() {
+  $("status").textContent = "Analysing simulated heat conditions…";
+  $("load").disabled = true;
+  try {
+    const id = encodeURIComponent($("mitanin").value);
+    const response = await fetch(
+      `http://127.0.0.1:3000/heat?mitanin=${id}&demo=hot`
+    );
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Request failed");
+
+    $("temp").textContent = `${data.analysis.peak_temp_c} °C`;
+    $("wetbulb").textContent = `${data.analysis.peak_wet_bulb_c} °C`;
+    $("high").textContent = data.households.filter(h => h.risk === "High").length;
+    $("source").textContent = data.forecast_source === "simulated" ? "Simulated" : data.forecast_source;
+
+    $("households").innerHTML = data.households.slice(0, 15).map((h, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${escapeHtml(h.name)} <span class="note">(${escapeHtml(h.id)})</span></td>
+        <td>${escapeHtml(h.ward)}</td>
+        <td><span class="tag ${escapeHtml(h.risk)}">${escapeHtml(h.risk)}</span></td>
+        <td>${escapeHtml(h.reason_en || "")}</td>
+      </tr>`).join("");
+
+    briefingText = data.briefing_hi || "";
+    $("briefing").textContent = briefingText;
+    $("status").textContent = "Analysis complete. Demo results use a simulated hot day.";
+  } catch (error) {
+    $("status").textContent =
+      "Could not load results. Make sure the local SAM server is running, then try again. Details: " + error.message;
+  } finally {
+    $("load").disabled = false;
+  }
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[ch]));
+}
+
+$("load").addEventListener("click", analyse);
+$("speak").addEventListener("click", () => {
+  if (!briefingText) {
+    $("status").textContent = "Please analyse heat risk first.";
+    return;
+  }
+  if (!("speechSynthesis" in window)) {
+    $("status").textContent = "Speech playback is not supported in this browser.";
+    return;
+  }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(briefingText);
+  utterance.lang = "hi-IN";
+  utterance.rate = 0.9;
+  speechSynthesis.speak(utterance);
+});
+</script>
+</body>
+</html>
+```
