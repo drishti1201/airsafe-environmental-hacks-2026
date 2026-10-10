@@ -3,478 +3,420 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mitanin Heat Desk</title>
+<title>Mitanin Heat Desk — Field Dispatch Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-canvas: #f8fafc;
-  --surface-card: rgba(255, 255, 255, 0.88);
-  --border-subtle: #e2e8f0;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --accent-teal: #0d9488;
-  --accent-teal-soft: #ccfbf1;
-  --accent-cyan: #0284c7;
-  --pill-bg: #f1f5f9;
-  --alert-red: #ef4444;
-  --alert-red-bg: #fef2f2;
-  --alert-amber: #f59e0b;
-  --alert-amber-bg: #fffbeb;
-  --alert-green: #10b981;
-  --alert-green-bg: #ecfdf5;
-  --shadow-sm: 0 1px 3px rgba(15,23,42,0.04);
-  --shadow-md: 0 4px 14px rgba(15,23,42,0.06);
+  --bg-sand: #f5f2eb;
+  --panel-bg: #fcfbf8;
+  --line-strong: #1a1e1c;
+  --line-hairline: #e3ded5;
+  --ink-primary: #121514;
+  --ink-secondary: #575e5b;
+  --ink-subtle: #8a928e;
+  --accent-teal: #086b5c;
+  --accent-teal-soft: #e5f3ef;
+  --danger-crimson: #c22f25;
+  --danger-soft: #fbeae8;
+  --amber-watch: #b86200;
+  --amber-soft: #fff3e0;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-* { box-sizing: border-box; transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease; }
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg-canvas);
-  font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--text-main);
+  background: var(--bg-sand);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Spotify-inspired App Shell */
-.app-container {
-  max-width: 1240px;
+/* Master Grid Layout */
+.app-shell {
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  border-left: 1px solid var(--line-hairline);
+  border-right: 1px solid var(--line-hairline);
+  background: var(--panel-bg);
+  min-height: 100vh;
 }
 
-/* Modern Top Navigation Bar */
-header.app-header {
-  display: flex;
-  justify-content: space-between;
+/* Top Telemetry Header */
+.masthead {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 16px 24px;
-  background: var(--surface-card);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow-sm);
-  flex-wrap: wrap;
-  gap: 16px;
+  border-bottom: 2px solid var(--line-strong);
+  padding: 14px 24px;
+  gap: 20px;
+  background: #ede8df;
 }
-
-.brand-wrapper {
+.brand-mark {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.brand-icon {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--accent-teal), #14b8a6);
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 4px 10px rgba(13,148,136,0.25);
+.brand-badge {
+  background: var(--line-strong);
+  color: var(--panel-bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
 }
-.brand-text h1 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.brand-text p {
-  margin: 0;
-  font-size: 12.5px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.header-status-pill {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #f1f5f9;
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 13px;
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
   font-weight: 600;
-  color: #334155;
-}
-.status-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--alert-green);
-  box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
-}
-
-/* Cards & Surface Layering */
-.desk-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
-}
-
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.section-head h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
-.section-head span.subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* Spotify Style Horizontal Scenario Pills */
-.filter-pills {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.pill-btn {
-  background: #f1f5f9;
-  border: 1px solid transparent;
-  color: #334155;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.pill-btn:hover {
-  background: #e2e8f0;
-}
-.pill-btn.active {
-  background: var(--text-main);
-  color: white;
-}
-.pill-btn.hot-active {
-  background: #fee2e2;
-  color: #991b1b;
-  border-color: #fca5a5;
-}
-.pill-btn.cool-active {
-  background: #e0f2fe;
-  color: #0369a1;
-  border-color: #7dd3fc;
-}
-
-.select-control {
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: white;
-  color: var(--text-main);
-  outline: none;
-  cursor: pointer;
-}
-
-/* Metrics Row */
-.metrics-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-.metric-box {
-  background: white;
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 16px 18px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-.metric-box::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--accent-teal);
-  opacity: 0.8;
-}
-.metric-box span {
-  display: block;
+.masthead-meta {
+  font-family: var(--font-mono);
   font-size: 12px;
+  color: var(--ink-secondary);
+  display: flex;
+  gap: 18px;
+}
+.clock-display {
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--accent-teal);
+  background: #ded7c9;
+  padding: 5px 10px;
+  border-radius: 3px;
+  border: 1px solid #cec5b4;
+}
+
+/* Control Strip */
+.control-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line-hairline);
+  padding: 10px 24px;
+  background: var(--panel-bg);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.label-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--ink-secondary);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.term-select, .term-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  background: white;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  color: var(--ink-primary);
+  font-weight: 600;
+}
+.term-btn {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: white;
+  color: var(--ink-primary);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+.term-btn:hover { background: #eee8dc; }
+.term-btn.active-hot { background: var(--danger-crimson); color: white; border-color: var(--danger-crimson); }
+.term-btn.active-cool { background: #1c527e; color: white; border-color: #1c527e; }
+.term-btn.active-live { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+/* KPI Ticker Row */
+.kpi-ticker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line-hairline);
+  background: white;
+}
+.kpi-cell {
+  padding: 14px 24px;
+  border-right: 1px solid var(--line-hairline);
+}
+.kpi-cell:last-child { border-right: none; }
+.kpi-cell .tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-subtle);
+  display: block;
   margin-bottom: 4px;
 }
-.metric-box strong {
+.kpi-cell .value {
+  font-family: var(--font-mono);
   font-size: 26px;
-  font-weight: 800;
-  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-/* Safe Work Advisory Card */
-.advisory-box {
-  background: #f0fdfa;
-  border: 1px solid #99f6e4;
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 16px;
+/* Safe Work Banner (Editorial Style) */
+.work-advisory {
+  border-bottom: 1px solid var(--line-hairline);
+  padding: 12px 24px;
+  background: #fbf9f4;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
+  gap: 16px;
 }
-.advisory-icon {
-  font-size: 26px;
-}
-.advisory-content h3 {
-  margin: 0 0 4px;
-  font-size: 14.5px;
+.advisory-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  color: #115e59;
+  padding: 4px 8px;
+  background: var(--amber-soft);
+  color: var(--amber-watch);
+  border: 1px solid #fbd09b;
+  border-radius: 3px;
+  white-space: nowrap;
 }
-.advisory-content p {
-  margin: 0;
+.advisory-text {
   font-size: 13.5px;
-  color: #134e4a;
+  color: var(--ink-secondary);
   line-height: 1.5;
 }
+.advisory-text strong { color: var(--ink-primary); }
 
-/* Curve Chart Container */
-.chart-container {
+/* Main Split View */
+.console-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 280px);
+}
+.pane-left {
+  border-right: 1px solid var(--line-hairline);
+  display: flex;
+  flex-direction: column;
+}
+.pane-right {
+  display: flex;
+  flex-direction: column;
+  background: #fdfcf9;
+}
+
+.pane-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line-hairline);
+}
+.section-tagline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+.section-tagline h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.section-tagline .meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-subtle);
+}
+
+/* SVG Chart Box */
+.chart-box {
   background: white;
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 18px 20px 10px;
-  margin-top: 10px;
+  border: 1px solid var(--line-hairline);
+  padding: 14px 14px 6px;
+  border-radius: 3px;
 }
 .chart-svg {
   width: 100%;
-  height: 250px;
+  height: 220px;
   display: block;
 }
-.chart-legend {
+.chart-footnotes {
   display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--border-subtle);
-}
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+  gap: 16px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-secondary);
 }
 
-/* Ward Table */
-.table-responsive {
-  overflow-x: auto;
-  border-radius: 14px;
-  border: 1px solid var(--border-subtle);
-}
-.minimal-table {
+/* Ward Planning Table */
+.data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-  background: white;
-  text-align: left;
-}
-.minimal-table th {
-  background: #f8fafc;
-  color: var(--text-muted);
-  font-weight: 700;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-.minimal-table td {
-  padding: 13px 16px;
-  border-bottom: 1px solid #f1f5f9;
-  color: var(--text-main);
-  font-weight: 500;
-}
-.minimal-table tr:last-child td {
-  border-bottom: none;
-}
-.tag-p1 {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 700;
-}
-.tag-p2 {
-  background: #fef3c7;
-  color: #92400e;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 700;
-}
-.tag-p3 {
-  background: #e0f2fe;
-  color: #0369a1;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 700;
-}
-
-/* Household Queue: Clean Spotify Tracklist Style */
-.queue-list {
-  display: grid;
-  gap: 10px;
-}
-.queue-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 18px;
-  background: white;
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  box-shadow: var(--shadow-sm);
-  gap: 16px;
-}
-.queue-row:hover {
-  border-color: #cbd5e1;
-  transform: translateY(-1px);
-}
-.queue-row.high {
-  border-left: 5px solid var(--alert-red);
-}
-.queue-row.medium {
-  border-left: 5px solid var(--alert-amber);
-}
-.queue-row.low {
-  border-left: 5px solid var(--alert-green);
-}
-.queue-main {
-  flex: 1;
-}
-.queue-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 15px;
-}
-.queue-desc {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  line-height: 1.4;
-}
-.queue-hi {
-  font-size: 12px;
-  color: #475569;
-  display: block;
-  margin-top: 3px;
-}
-.visit-toggle-btn {
-  background: var(--pill-bg);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
-  padding: 8px 14px;
   font-size: 12.5px;
+}
+.data-table th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-subtle);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.data-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line-hairline);
+  color: var(--ink-primary);
+}
+.badge-p1 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--danger-soft);
+  color: var(--danger-crimson);
+  padding: 2px 6px;
+  border-radius: 2px;
   font-weight: 700;
-  border-radius: 999px;
+}
+.badge-p2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--amber-soft);
+  color: var(--amber-watch);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+.badge-p3 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: #edf2f7;
+  color: #4a5568;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+/* Household Queue: Monospaced Clinical Ledger */
+.queue-container {
+  overflow-y: auto;
+  max-height: 580px;
+  padding: 0;
+}
+.household-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line-hairline);
+  gap: 12px;
+  background: white;
+}
+.household-row:hover { background: #fbf9f4; }
+.household-row.high { border-left: 4px solid var(--danger-crimson); }
+.household-row.medium { border-left: 4px solid var(--amber-watch); }
+.household-row.low { border-left: 4px solid var(--accent-teal); }
+.row-idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-subtle);
+}
+.row-main strong {
+  font-size: 14px;
+  color: var(--ink-primary);
+  font-weight: 600;
+}
+.row-meta {
+  font-size: 12px;
+  color: var(--ink-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+.row-meta .hi {
+  color: #555c58;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  display: block;
+}
+.row-action button {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: 1px solid var(--line-hairline);
+  background: var(--panel-bg);
+  color: var(--ink-primary);
   cursor: pointer;
-  white-space: nowrap;
+  border-radius: 3px;
 }
-.visit-toggle-btn.done {
-  background: var(--alert-green);
-  border-color: var(--alert-green);
+.row-action button.done {
+  background: var(--accent-teal);
   color: white;
+  border-color: var(--accent-teal);
 }
 
-/* Audio Hindi Briefing Card */
-.audio-brief-box {
-  background: #f8fafc;
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 18px 20px;
-}
-.audio-brief-text {
+/* Hindi Briefing Box */
+.briefing-card {
+  padding: 16px 20px;
+  background: #f6f3eb;
+  border: 1px solid #ded7c9;
+  border-radius: 3px;
+  font-family: 'Noto Sans Devanagari', var(--font-serif);
   font-size: 15px;
-  line-height: 1.7;
-  color: #334155;
-  margin: 0 0 14px;
-  white-space: pre-wrap;
+  line-height: 1.8;
+  color: #212624;
+  margin-top: 10px;
 }
 
-@media (max-width: 860px) {
-  .metrics-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .queue-row { flex-direction: column; align-items: flex-start; }
+@media (max-width: 980px) {
+  .console-split { grid-template-columns: 1fr; }
+  .pane-left { border-right: none; }
+  .kpi-ticker { grid-template-columns: repeat(2, 1fr); }
+  .kpi-cell:nth-child(2) { border-right: none; }
 }
-@media (max-width: 480px) {
-  .metrics-strip { grid-template-columns: 1fr; }
-  .header-status-pill { width: 100%; justify-content: space-between; }
+@media (max-width: 600px) {
+  .kpi-ticker { grid-template-columns: 1fr; }
+  .kpi-cell { border-right: none; }
+  .masthead { grid-template-columns: 1fr; gap: 8px; }
 }
 </style>
 </head>
 <body>
-<div class="app-container">
-  <!-- Top App Navigation -->
-  <header class="app-header">
-    <div class="brand-wrapper">
-      <div class="brand-icon">🌱</div>
-      <div class="brand-text">
-        <h1>Mitanin Heat Desk</h1>
-        <p>Predictive Wet-Bulb Triage · Raipur Field Division</p>
-      </div>
+<div class="app-shell">
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="brand-mark">
+      <span class="brand-badge">TELEMETRY // CH-07</span>
+      <h1 class="brand-title">Mitanin Heat Desk</h1>
     </div>
-    <div class="header-status-pill">
-      <span class="status-indicator"></span>
-      <span id="liveClock">Loading IST Clock...</span>
-      <span style="color:#cbd5e1;">|</span>
-      <span id="forecastSync" style="font-weight:500; color:var(--text-muted);">Syncing</span>
+    <div class="masthead-meta">
+      <span>SECTOR: RAIPUR, CHHATTISGARH</span>
+      <span>MODEL: STULL WET-BULB + SOCIO-VULNERABILITY</span>
     </div>
+    <div class="clock-display" id="liveClock">--:--:-- IST</div>
   </header>
 
-  <!-- Controls Card -->
-  <section class="desk-card">
-    <div class="section-head">
-      <div>
-        <h2>Triage Workspace & Controls</h2>
-        <span class="subtitle">Filter field jurisdictions, evaluate scenarios, or inspect real archived summer heatwaves</span>
-      </div>
-      <div id="status" style="font-size:12.5px; font-weight:600; color:var(--text-muted);">Ready</div>
-    </div>
-
-    <div class="filter-pills">
-      <label for="mitanin" style="font-size:13px; font-weight:700; color:var(--text-muted);">Ward / Worker:</label>
-      <select id="mitanin" class="select-control">
+  <!-- Control Strip -->
+  <div class="control-strip">
+    <div class="control-group">
+      <span class="label-tag">Field Unit:</span>
+      <select id="mitanin" class="term-select">
         <option value="ALL">All Mitanins (All 200 Households)</option>
         <option value="M01">M01 — Ward 1</option>
         <option value="M02">M02 — Ward 2</option>
@@ -483,120 +425,109 @@ header.app-header {
         <option value="M05">M05 — Ward 5</option>
       </select>
 
-      <button class="pill-btn hot-active" id="hotBtn">🔥 Simulated Hot Day</button>
-      <button class="pill-btn" id="coolBtn">❄️ Simulated Cool Day</button>
-      <button class="pill-btn" id="liveBtn">📡 Live Open-Meteo</button>
-      <button class="pill-btn" id="speakBtn" style="background:#e0f2fe; color:#0369a1;">🔊 Hindi Speech</button>
+      <span class="label-tag" style="margin-left:8px;">Scenario:</span>
+      <button class="term-btn active-hot" id="hotBtn">Simulated Hot Day</button>
+      <button class="term-btn" id="coolBtn">Simulated Cool Day</button>
+      <button class="term-btn" id="liveBtn">Open-Meteo Live</button>
+      <button class="term-btn" id="speakBtn">🔊 Hindi Voice</button>
     </div>
 
-    <div class="filter-pills" style="margin-bottom:0; padding-top:12px; border-top:1px dashed var(--border-subtle);">
-      <span style="font-size:12.5px; font-weight:700; color:var(--text-muted);">Historical Archive Replay:</span>
-      <input type="date" id="histDate" class="select-control" min="2022-01-01" value="2024-05-25">
-      <button class="pill-btn" id="histBtn">⏪ Run Archive</button>
-      <span style="font-size:12px; color:var(--text-muted);">Replays historical weather for the selected date.</span>
-    </div>
-  </section>
-
-  <!-- Metrics Strip -->
-  <div class="metrics-strip">
-    <div class="metric-box">
-      <span>Peak Air Temperature</span>
-      <strong id="temp">—</strong>
-    </div>
-    <div class="metric-box">
-      <span>Peak Wet-Bulb</span>
-      <strong id="wetbulb">—</strong>
-    </div>
-    <div class="metric-box">
-      <span>High-Risk Households</span>
-      <strong id="high" style="color:var(--alert-red);">—</strong>
-    </div>
-    <div class="metric-box">
-      <span>Meteorological Source</span>
-      <strong id="source" style="font-size:18px; font-weight:700;">—</strong>
+    <div class="control-group">
+      <span class="label-tag">Archive Replay:</span>
+      <input type="date" id="histDate" class="term-date" min="2022-01-01" value="2024-05-25">
+      <button class="term-btn" id="histBtn">Run Archive</button>
     </div>
   </div>
 
-  <!-- Safe Work Advisory Banner -->
-  <div class="advisory-box">
-    <div class="advisory-icon">👷</div>
-    <div class="advisory-content">
-      <h3>Outdoor Labourer Work Window (Field Advisory)</h3>
-      <p id="workWindowText">Calculating safe working hours based on thermodynamic wet-bulb thresholds...</p>
+  <!-- KPI Ticker -->
+  <div class="kpi-ticker">
+    <div class="kpi-cell">
+      <span class="tag">Peak Air Temperature</span>
+      <div class="value" id="temp">—</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="tag">Peak Wet-Bulb Temp</span>
+      <div class="value" id="wetbulb">—</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="tag">High-Risk Caseload</span>
+      <div class="value" id="high" style="color:var(--danger-crimson);">—</div>
+    </div>
+    <div class="kpi-cell">
+      <span class="tag">Meteorological Source</span>
+      <div class="value" id="source" style="font-size:16px; padding-top:6px;">—</div>
     </div>
   </div>
 
-  <!-- Curve Chart Section -->
-  <section class="desk-card">
-    <div class="section-head">
-      <div>
-        <h2>Hourly Wet-Bulb Thermodynamic Curve</h2>
-        <span class="subtitle">Evaluates sweat evaporative cooling limits. 28°C watch threshold · 31°C physiological danger limit.</span>
-      </div>
-      <span id="peakLabel" style="font-size:12.5px; font-weight:600; color:var(--text-muted);"></span>
-    </div>
-    <div class="chart-container">
-      <svg id="curve" class="chart-svg" viewBox="0 0 900 250" role="img" aria-label="Wet bulb hourly curve"></svg>
-      <div class="chart-legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--accent-teal);"></span>Wet-Bulb Temp</span>
-        <span class="legend-item"><span class="legend-dot" style="background:var(--alert-amber);"></span>28°C Watch Threshold</span>
-        <span class="legend-item"><span class="legend-dot" style="background:var(--alert-red);"></span>31°C Danger Threshold</span>
-        <span class="legend-item"><span class="legend-dot" style="background:var(--alert-green);"></span>Current Time Marker</span>
-      </div>
-    </div>
-  </section>
+  <!-- Operational Advisory Strip -->
+  <div class="work-advisory">
+    <span class="advisory-badge">OPERATIONAL WORK WINDOW</span>
+    <div class="advisory-text" id="workWindowText">Calculating safe working hours based on hourly wet-bulb conditions...</div>
+  </div>
 
-  <!-- Ward View for Health Planners -->
-  <section class="desk-card">
-    <div class="section-head">
-      <div>
-        <h2>Municipal & Ward Planning Allocation</h2>
-        <span class="subtitle">Strategic cool-roof targeting and supervisor caseload distribution</span>
+  <!-- Console Split Body -->
+  <div class="console-split">
+    <!-- Left Pane: Environmental Modeling & Planner -->
+    <div class="pane-left">
+      <div class="pane-section">
+        <div class="section-tagline">
+          <h3>Thermodynamic Wet-Bulb Curve</h3>
+          <span class="meta" id="peakLabel"></span>
+        </div>
+        <div class="chart-box">
+          <svg id="curve" class="chart-svg" viewBox="0 0 700 220" role="img"></svg>
+          <div class="chart-footnotes">
+            <span>● <b>Teal</b>: Wet-Bulb</span>
+            <span>-- <b>Amber</b>: 28°C Watch</span>
+            <span>-- <b>Red</b>: 31°C Danger Limit</span>
+            <span>| <b>Green</b>: Current Time</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="table-responsive">
-      <table class="minimal-table">
-        <thead>
-          <tr>
-            <th>Ward Designation</th>
-            <th>Sampled Households</th>
-            <th>High-Risk Caseload</th>
-            <th>Tin / Asbestos Roof Share</th>
-            <th>Cool-Roof Priority Rating</th>
-          </tr>
-        </thead>
-        <tbody id="wardTableBody">
-          <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Loading ward analytics...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
 
-  <!-- Prioritized Frontline Household Queue -->
-  <section class="desk-card">
-    <div class="section-head">
-      <div>
-        <h2>Ranked Frontline Triage Queue</h2>
-        <span class="subtitle">Prioritized by heat vulnerability index (roof type, pregnancy, elderly living alone, outdoor labour)</span>
-      </div>
-    </div>
-    <div id="households" class="queue-list">
-      <div style="text-align:center; padding:20px; color:var(--text-muted);">Loading household records...</div>
-    </div>
-  </section>
+      <div class="pane-section" style="flex:1;">
+        <div class="section-tagline">
+          <h3>Municipal Cool-Roof Allocation (Ward View)</h3>
+          <span class="meta">Sorted by Risk Index</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ward</th>
+              <th>Census</th>
+              <th>High Risk</th>
+              <th>Tin/Asbestos %</th>
+              <th>Cool-Roof Priority</th>
+            </tr>
+          </thead>
+          <tbody id="wardTableBody">
+            <tr><td colspan="5" style="text-align:center; color:var(--ink-subtle);">Loading ward metrics...</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Hindi Field Briefing -->
-  <section class="desk-card">
-    <div class="section-head">
-      <div>
-        <h2>Automated Hindi Field Briefing</h2>
-        <span class="subtitle">Synthesized text for community workers and audio playback</span>
+        <div style="margin-top:20px;">
+          <div class="section-tagline">
+            <h3>Field Audio Briefing (Hindi)</h3>
+            <span class="meta" id="status">Syncing...</span>
+          </div>
+          <div class="briefing-card" id="briefing">परिणाम लोड हो रहे हैं...</div>
+        </div>
       </div>
     </div>
-    <div class="audio-brief-box">
-      <p id="briefing" class="audio-brief-text">परिणाम लोड हो रहे हैं...</p>
+
+    <!-- Right Pane: Frontline Triage Queue -->
+    <div class="pane-right">
+      <div class="pane-section" style="padding-bottom:10px;">
+        <div class="section-tagline">
+          <h3>Frontline Household Triage Queue</h3>
+          <span class="meta">Prioritized by multi-variable heat vulnerability index</span>
+        </div>
+      </div>
+      <div class="queue-container" id="households">
+        <div style="padding:20px; text-align:center; color:var(--ink-subtle);">Loading priority queue...</div>
+      </div>
     </div>
-  </section>
+  </div>
 </div>
 
 <script>
@@ -606,9 +537,9 @@ let briefingText = "";
 
 function updateClock() {
   const now = new Date();
-  const options = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, weekday: "short", day: "numeric", month: "short", timeZone: "Asia/Kolkata" };
+  const options = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Asia/Kolkata" };
   const liveEl = $("liveClock");
-  if (liveEl) liveEl.textContent = `${now.toLocaleString("en-IN", options)} (IST)`;
+  if (liveEl) liveEl.textContent = `${now.toLocaleTimeString("en-GB", options)} IST`;
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -632,11 +563,11 @@ function computeSafeWorkWindow(curve) {
   }
   const dangerHours = curve.filter(p => Number(p.wet_bulb_c) >= 28.0).map(p => Number(p.hour));
   if (dangerHours.length === 0) {
-    $("workWindowText").innerHTML = "<strong>✅ Low Heat Stress:</strong> Safe for standard outdoor labour shifts throughout daylight hours. Maintain routine hydration.";
+    $("workWindowText").innerHTML = "<strong>Normal Schedule Permitted:</strong> Heat stress below physiological watch line. Standard hydration protocols apply.";
   } else {
     const startDanger = Math.min(...dangerHours);
     const endDanger = Math.max(...dangerHours);
-    $("workWindowText").innerHTML = `<strong>⚠️ Heat Advisory:</strong> Outdoor heavy labour recommended <strong>before ${hourLabel(startDanger)}</strong> (outside peak hours). <strong>Suggested operational rest</strong> from <strong>${hourLabel(startDanger)} to ${hourLabel(endDanger)}</strong> (wet-bulb $\\ge$ 28°C watch limit). Resume outdoor tasks after <strong>${hourLabel(endDanger)}</strong>.`;
+    $("workWindowText").innerHTML = `Outdoor heavy labour recommended <strong>before ${hourLabel(startDanger)}</strong>. <strong>Suggested operational rest</strong> from <strong>${hourLabel(startDanger)} to ${hourLabel(endDanger)}</strong> (wet-bulb ≥ 28°C watch limit). Resume outdoor activity after <strong>${hourLabel(endDanger)}</strong>.`;
   }
 }
 
@@ -667,28 +598,28 @@ function renderWardPlanner(households) {
   wardArray.sort((a,b) => b.score - a.score);
 
   tbody.innerHTML = wardArray.map((w, idx) => {
-    let badge = '<span class="tag-p3">Priority 3: Standard</span>';
+    let badge = '<span class="badge-p3">Priority 3: Standard</span>';
     if (idx < 2) {
-      badge = '<span class="tag-p1">Priority 1: Immediate Cool-Roof</span>';
+      badge = '<span class="badge-p1">Priority 1: Immediate Cool-Roof</span>';
     } else if (idx < 4) {
-      badge = '<span class="tag-p2">Priority 2: Secondary Target</span>';
+      badge = '<span class="badge-p2">Priority 2: Secondary</span>';
     }
-    const sampleNote = w.total <= 5 ? ' <small style="color:var(--text-muted);">(small sample)</small>' : '';
+    const sampleNote = w.total <= 5 ? ' <small style="color:var(--ink-subtle);">(small sample)</small>' : '';
     return `<tr>
       <td><strong>${escapeHtml(w.name)}</strong>${sampleNote}</td>
-      <td>${w.total}</td>
-      <td style="font-weight:700; color:${w.high > 0 ? 'var(--alert-red)' : 'var(--alert-green)'};">${w.high}</td>
-      <td>${w.tinPct}% (${w.tinRoof} households)</td>
+      <td style="font-family:var(--font-mono);">${w.total}</td>
+      <td style="font-family:var(--font-mono); font-weight:700; color:${w.high > 0 ? 'var(--danger-crimson)' : 'var(--accent-teal)'};">${w.high}</td>
+      <td style="font-family:var(--font-mono);">${w.tinPct}%</td>
       <td>${badge}</td>
     </tr>`;
   }).join("");
 }
 
 function drawCurve(points) {
-  const svg = $("curve"), W=900, H=250, left=50, right=25, top=25, bottom=45;
+  const svg = $("curve"), W=700, H=220, left=45, right=20, top=20, bottom=35;
   svg.innerHTML = "";
   if (!Array.isArray(points) || points.length === 0) {
-    svg.innerHTML = '<text x="30" y="60" fill="#64748b">No hourly curve data available.</text>'; 
+    svg.innerHTML = '<text x="30" y="60" fill="#8a928e">No hourly curve available.</text>'; 
     return;
   }
   const values = points.map(p => Number(p.wet_bulb_c));
@@ -706,13 +637,13 @@ function drawCurve(points) {
   };
 
   [28, 31].forEach((v,i)=>{
-    add("line",{x1:left,y1:y(v),x2:W-right,y2:y(v),stroke:i?"#ef4444":"#f59e0b","stroke-dasharray":"5 5","stroke-width":1.5});
-    add("text",{x:5,y:y(v)+4,fill:i?"#ef4444":"#b45309","font-size":11,"font-weight":"700"},`${v}°C`);
+    add("line",{x1:left,y1:y(v),x2:W-right,y2:y(v),stroke:i?"#c22f25":"#b86200","stroke-dasharray":"4 4","stroke-width":1.2});
+    add("text",{x:5,y:y(v)+4,fill:i?"#c22f25":"#b86200","font-size":10,"font-family":"monospace"},`${v}°C`);
   });
 
   points.forEach((p,i)=>{
-    add("line",{x1:x(i),y1:top,x2:x(i),y2:H-bottom,stroke:"#f1f5f9","stroke-width":1});
-    add("text",{x:x(i),y:H-14,fill:"#64748b","font-size":12,"font-weight":"500","text-anchor":"middle"},hourLabel(p.hour));
+    add("line",{x1:x(i),y1:top,x2:x(i),y2:H-bottom,stroke:"#e3ded5","stroke-width":1});
+    add("text",{x:x(i),y:H-12,fill:"#575e5b","font-size":11,"font-family":"monospace","text-anchor":"middle"},hourLabel(p.hour));
   });
 
   const currentHour = new Date().getHours();
@@ -721,45 +652,45 @@ function drawCurve(points) {
   if (currentHour >= startH && currentHour <= endH) {
     const frac = (currentHour - startH) / Math.max(1, endH - startH);
     const xNow = left + frac * (W - left - right);
-    add("line",{x1:xNow,y1:top,x2:xNow,y2:H-bottom,stroke:"#10b981","stroke-dasharray":"4 4","stroke-width":2});
-    add("text",{x:xNow,y:top-6,fill:"#10b981","font-size":11,"font-weight":"700","text-anchor":"middle"},`Now (${hourLabel(currentHour)})`);
+    add("line",{x1:xNow,y1:top,x2:xNow,y2:H-bottom,stroke:"#086b5c","stroke-dasharray":"3 3","stroke-width":2});
+    add("text",{x:xNow,y:top-6,fill:"#086b5c","font-size":10,"font-family":"monospace","font-weight":"bold","text-anchor":"middle"},`Now (${hourLabel(currentHour)})`);
   }
 
   const d=points.map((p,i)=>`${i?"L":"M"} ${x(i)} ${y(Number(p.wet_bulb_c))}`).join(" ");
-  add("path",{d,fill:"none",stroke:"#0d9488","stroke-width":3.5,"stroke-linecap":"round","stroke-linejoin":"round"});
+  add("path",{d,fill:"none",stroke:"#086b5c","stroke-width":2.5,"stroke-linecap":"round","stroke-linejoin":"round"});
 
   points.forEach((p,i)=>{
     const val = Number(p.wet_bulb_c);
     const py = y(val);
-    add("circle",{cx:x(i),cy:py,r:5,fill:"#0d9488"});
-    const isNearReference = val >= 28.2 && val <= 30.5;
-    const textY = isNearReference ? py + 16 : py - 10;
-    add("text",{x:x(i),y:textY,fill:"#0f172a","font-size":11,"font-weight":"700","text-anchor":"middle"},`${val.toFixed(1)}°`);
+    add("circle",{cx:x(i),cy:py,r:4,fill:"#086b5c"});
+    const isNearRef = val >= 28.2 && val <= 30.5;
+    const textY = isNearRef ? py + 14 : py - 8;
+    add("text",{x:x(i),y:textY,fill:"#121514","font-size":11,"font-weight":"700","font-family":"monospace","text-anchor":"middle"},`${val.toFixed(1)}°`);
   });
 }
 
 function renderHouseholds(households) {
   const container=$("households");
   if (!Array.isArray(households) || !households.length) {
-    container.innerHTML='<div style="text-align:center; padding:20px; color:var(--text-muted);">No records found.</div>';
+    container.innerHTML='<div style="padding:20px; text-align:center; color:var(--ink-subtle);">No records returned.</div>';
     return;
   }
   container.innerHTML=households.map((h,i)=>{
     const risk=String(h.risk||"Low").toLowerCase();
     const cls = risk==="high" ? "high" : risk==="medium" ? "medium" : "low";
-    return `<div class="queue-row ${cls}">
-      <div class="queue-main">
-        <div class="queue-title">
-          <span>${i+1}. ${escapeHtml(h.name||h.id)}</span>
-          <span style="font-size:12px; font-weight:600; color:var(--text-muted);">(Ward ${escapeHtml(h.ward||"—")})</span>
-          <span style="font-size:11px; padding:2px 8px; border-radius:999px; font-weight:700; background:${risk==='high'?'#fee2e2':'#f1f5f9'}; color:${risk==='high'?'#991b1b':'#475569'};">${escapeHtml(h.risk||"Low")} Priority</span>
-        </div>
-        <div class="queue-desc">
-          <b>Risk Drivers:</b> ${escapeHtml(h.reason_en||"—")}
-          <span class="queue-hi" lang="hi">${escapeHtml(h.reason_hi||"")}</span>
+    return `<div class="household-row ${cls}">
+      <span class="row-idx">${String(i+1).padStart(3, '0')}</span>
+      <div class="row-main">
+        <strong>${escapeHtml(h.name||h.id)}</strong>
+        <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-subtle);">[Ward ${escapeHtml(h.ward||"—")}] [ID: ${escapeHtml(h.id)}]</span>
+        <div class="row-meta">
+          <span>${escapeHtml(h.reason_en||"—")}</span>
+          <span class="hi">${escapeHtml(h.reason_hi||"")}</span>
         </div>
       </div>
-      <button class="visit-toggle-btn" type="button" data-visit="${escapeHtml(h.id)}">Mark Visited</button>
+      <div class="row-action">
+        <button type="button" data-visit="${escapeHtml(h.id)}">Mark Visited</button>
+      </div>
     </div>`;
   }).join("");
 
@@ -776,7 +707,7 @@ function calcWetBulb(T, RH) {
 }
 
 async function runHistoricalReplay(dateStr) {
-  $("status").textContent=`Querying Open-Meteo archive for ${dateStr}…`;
+  $("status").textContent=`Querying archive: ${dateStr}...`;
   try {
     const lat = 21.25, lon = 81.63;
     const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&hourly=temperature_2m,relative_humidity_2m&timezone=Asia%2FKolkata`;
@@ -802,8 +733,8 @@ async function runHistoricalReplay(dateStr) {
       return { ...h, risk: isHigh ? "High" : (maxWb >= 27.5 ? "Medium" : "Low") };
     });
 
-    $("temp").textContent = `${maxTemp} °C`;
-    $("wetbulb").textContent = `${maxWb} °C`;
+    $("temp").textContent = `${maxTemp}°C`;
+    $("wetbulb").textContent = `${maxWb}°C`;
     $("high").textContent = households.filter(h => h.risk === "High").length;
     $("source").textContent = `Archive (${dateStr})`;
     $("peakLabel").textContent = `Historical Peak: ${maxWb}°C at ${hourLabel(peakHour)}`;
@@ -815,14 +746,14 @@ async function runHistoricalReplay(dateStr) {
 
     briefingText = `ऐतिहासिक मौसम डेटा: ${dateStr} को रायपुर में अधिकतम वेट-बल्ब तापमान ${maxWb} डिग्री सेल्सियस दर्ज किया गया था। इस स्थिति में उच्च जोखिम वाले घरों को तुरंत ओआरएस और सुरक्षा की आवश्यकता होती है।`;
     $("briefing").textContent = briefingText;
-    $("status").textContent = `Archive data loaded for ${dateStr}`;
+    $("status").textContent = `Archive loaded: ${dateStr}`;
   } catch(err) {
     $("status").textContent = `Archive error: ${err.message}`;
   }
 }
 
 async function loadScenario(scenario) {
-  $("status").textContent="Running triage model…";
+  $("status").textContent="Querying triage API...";
   const mitaninVal = $("mitanin").value;
   const url = `${API_BASE}?mitanin=${encodeURIComponent(mitaninVal)}&demo=${encodeURIComponent(scenario)}`;
 
@@ -831,13 +762,11 @@ async function loadScenario(scenario) {
     const data=await response.json();
     if(!response.ok) throw new Error(data.error||`Request failed (${response.status})`);
     const a=data.analysis||{};
-    $("temp").textContent=`${a.peak_temp_c ?? "—"} °C`;
-    $("wetbulb").textContent=`${a.peak_wet_bulb_c ?? "—"} °C`;
+    $("temp").textContent=`${a.peak_temp_c ?? "—"}°C`;
+    $("wetbulb").textContent=`${a.peak_wet_bulb_c ?? "—"}°C`;
     $("high").textContent=(data.households||[]).filter(h=>String(h.risk).toLowerCase()==="high").length;
     $("source").textContent=data.forecast_source==="simulated" ? "Simulated Baseline" : (data.forecast_source||"Open-Meteo API");
-    $("peakLabel").textContent=`Peak: ${a.peak_wet_bulb_c ?? "—"}°C at ${hourLabel(a.peak_hour ?? 13)} · ${a.severity ?? "—"}`;
-    
-    $("forecastSync").textContent = `Sync: ${new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"})} IST`;
+    $("peakLabel").textContent=`Peak: ${a.peak_wet_bulb_c ?? "—"}°C @ ${hourLabel(a.peak_hour ?? 13)}`;
 
     drawCurve(a.curve||[]);
     computeSafeWorkWindow(a.curve||[]);
@@ -845,25 +774,31 @@ async function loadScenario(scenario) {
     renderWardPlanner(data.households||[]);
     briefingText=data.briefing_hi||"हिंदी ब्रीफिंग उपलब्ध नहीं है।";
     $("briefing").textContent=briefingText;
-    $("status").textContent=`Analysis complete · ${data.households?.length||0} households evaluated`;
+    $("status").textContent=`Analysis complete: ${data.households?.length||0} records processed`;
   } catch(err) {
     $("status").textContent=`Load error: ${err.message}`;
   }
 }
 
+function clearBtnStyles() {
+  $("hotBtn").className = "term-btn";
+  $("coolBtn").className = "term-btn";
+  $("liveBtn").className = "term-btn";
+}
+
 $("hotBtn").addEventListener("click",()=>{
-  document.querySelectorAll(".pill-btn").forEach(b=>b.classList.remove("active","hot-active","cool-active"));
-  $("hotBtn").classList.add("hot-active");
+  clearBtnStyles();
+  $("hotBtn").classList.add("active-hot");
   loadScenario("hot");
 });
 $("coolBtn").addEventListener("click",()=>{
-  document.querySelectorAll(".pill-btn").forEach(b=>b.classList.remove("active","hot-active","cool-active"));
-  $("coolBtn").classList.add("cool-active");
+  clearBtnStyles();
+  $("coolBtn").classList.add("active-cool");
   loadScenario("cool");
 });
 $("liveBtn").addEventListener("click",()=>{
-  document.querySelectorAll(".pill-btn").forEach(b=>b.classList.remove("active","hot-active","cool-active"));
-  $("liveBtn").classList.add("active");
+  clearBtnStyles();
+  $("liveBtn").classList.add("active-live");
   loadScenario("forecast");
 });
 $("mitanin").addEventListener("change",()=>loadScenario("hot"));
