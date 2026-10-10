@@ -5,48 +5,107 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mitanin Heat Desk</title>
 <style>
-:root{--green:#176b52;--deep:#164e40;--bg:#f2f7f4;--card:#fff;--muted:#61736c;--red:#c9342b;--amber:#b76a00;--blue:#2463eb}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#173b32}
-header{background:var(--deep);color:white;padding:26px max(22px,calc((100% - 1250px)/2))}
-header h1{margin:0 0 7px;font-size:clamp(25px,3vw,36px)}header p{margin:0;color:#d7eee4}
-main{max-width:1250px;margin:28px auto;padding:0 18px 35px}
-.card{background:var(--card);border-radius:17px;padding:24px;margin-bottom:22px;box-shadow:0 5px 22px #183d3010}
-h2{margin:0 0 14px;font-size:23px}h3{margin:0 0 12px}
-.muted{color:var(--muted);line-height:1.6}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}
-select,button{font:inherit;border-radius:9px;padding:12px 15px}select{border:1px solid #cbd9d2;background:white}button{border:0;cursor:pointer;font-weight:700}
-.primary{background:var(--green);color:white}.secondary{background:#dff1e8;color:#15533f}.hot{background:#ffeadc;color:#9b351d;border:1px solid #ffd0b7}.cool{background:#e0efff;color:#174b92;border:1px solid #c5ddff}
-.status{margin-top:14px;color:var(--muted);min-height:22px}
-.time-bar{display:flex;justify-content:space-between;align-items:center;background:#e9f3ee;padding:10px 16px;border-radius:10px;margin-bottom:18px;font-size:14px;color:#1e4c3e;flex-wrap:wrap;gap:10px}
-.time-bar strong{color:#0e362b}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
-.kpi{background:#e1f2e9;border-radius:14px;padding:20px}.kpi span{display:block;color:#577268;font-size:14px;margin-bottom:8px}.kpi strong{font-size:27px}
-.chart-wrap{width:100%;overflow:hidden}.chart{width:100%;height:250px;display:block}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
-.households{display:grid;gap:10px}.house{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border:1px solid #e1eae5;border-left:6px solid #16a36a;border-radius:10px;padding:15px}.house.high{border-left-color:#ef4444}.house.medium{border-left-color:#e9a23b}.house strong{font-size:17px}.meta{color:var(--muted);font-size:13px}.reason{margin-top:7px;line-height:1.5}.score{color:var(--muted);font-size:13px}.visited{background:#13213b;color:white;padding:9px 12px;font-size:12px;border-radius:6px;border:none;cursor:pointer}.visited.done{background:#17744f}
-.briefing{font-size:18px;line-height:1.9;white-space:pre-wrap}.pill{display:inline-block;border-radius:20px;padding:7px 12px;font-size:13px;font-weight:700;background:#e6eee9;color:#38574a}
-.note{font-size:14px;line-height:1.6;color:var(--muted)}.error{color:#b42318}
-@media(max-width:850px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.house{grid-template-columns:1fr}.visited{justify-self:start}}
-@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr}.kpi strong{font-size:22px}.card{padding:17px}.controls button{width:100%}}
+:root {
+  --primary-navy: #0b192c;
+  --deep-blue: #1e3e62;
+  --aqua-cyan: #00adb5;
+  --aqua-light: #e0f7fa;
+  --bg-slate: #f4f7fb;
+  --card-white: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --alert-red: #ef4444;
+  --alert-amber: #f59e0b;
+  --alert-green: #10b981;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-slate); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif; color: var(--text-dark); }
+header { background: linear-gradient(135deg, var(--primary-navy) 0%, var(--deep-blue) 100%); color: white; padding: 24px max(24px, calc((100% - 1250px)/2)); border-bottom: 3px solid var(--aqua-cyan); }
+header h1 { margin: 0 0 6px; font-size: clamp(24px, 2.5vw, 34px); display: flex; align-items: center; gap: 10px; }
+header p { margin: 0; color: #b2ebf2; font-size: 14px; }
+main { max-width: 1250px; margin: 24px auto; padding: 0 16px 40px; }
+
+.time-bar { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid #dbeafe; padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; color: var(--deep-blue); box-shadow: 0 2px 8px rgba(11,25,44,0.04); flex-wrap: wrap; gap: 10px; }
+.time-bar strong { color: var(--primary-navy); }
+
+.card { background: var(--card-white); border-radius: 14px; padding: 22px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(11,25,44,0.06); border: 1px solid #e2e8f0; }
+h2 { margin: 0 0 12px; font-size: 20px; color: var(--primary-navy); }
+.muted { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-top: 0; }
+
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+select, button, input[type="date"] { font: inherit; border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+select, input[type="date"] { border: 1px solid #cbd5e1; background: white; color: var(--text-dark); }
+button { border: 0; cursor: pointer; font-weight: 600; transition: transform 0.1s ease, opacity 0.2s ease; }
+button:hover { opacity: 0.92; }
+button:active { transform: scale(0.98); }
+
+.btn-hot { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.btn-cool { background: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+.btn-primary { background: var(--aqua-cyan); color: #0b192c; font-weight: 700; }
+.btn-audio { background: #f1f5f9; color: var(--deep-blue); border: 1px solid #cbd5e1; }
+
+.status-bar { margin-top: 14px; font-size: 13px; color: var(--text-muted); min-height: 20px; font-weight: 500; }
+.status-bar.error { color: var(--alert-red); }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
+.kpi { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; border-top: 4px solid var(--aqua-cyan); box-shadow: 0 2px 8px rgba(11,25,44,0.04); }
+.kpi span { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+.kpi strong { font-size: 26px; color: var(--primary-navy); }
+
+/* Work Window Banner */
+.work-window-card { background: #eff6ff; border-left: 6px solid #2563eb; border-radius: 10px; padding: 16px 20px; margin-bottom: 22px; }
+.work-window-card h3 { margin: 0 0 6px; color: #1e40af; font-size: 16px; }
+.work-window-card p { margin: 0; font-size: 14px; color: #1e3a8a; line-height: 1.5; }
+
+.chart-wrap { width: 100%; overflow: hidden; background: #fafcff; border-radius: 8px; border: 1px solid #f1f5f9; }
+.chart { width: 100%; height: 260px; display: block; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-muted); margin-top: 12px; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+/* Ward Planner Table */
+.ward-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.ward-table th, .ward-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+.ward-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
+.badge-priority { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+.households { display: grid; gap: 10px; }
+.house { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid #e2e8f0; border-left: 6px solid var(--alert-green); border-radius: 10px; padding: 15px; background: white; }
+.house.high { border-left-color: var(--alert-red); }
+.house.medium { border-left-color: var(--alert-amber); }
+.house strong { font-size: 16px; color: var(--primary-navy); }
+.meta { color: var(--text-muted); font-size: 13px; }
+.reason { margin-top: 6px; line-height: 1.4; font-size: 13px; }
+.score { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+.pill { display: inline-block; border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 700; background: #f1f5f9; color: var(--text-muted); margin-top: 8px; }
+.visited-btn { background: var(--primary-navy); color: white; padding: 9px 14px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; }
+.visited-btn.done { background: var(--alert-green); }
+
+.briefing { font-size: 16px; line-height: 1.8; white-space: pre-wrap; color: var(--primary-navy); background: #f8fafc; border-left: 4px solid var(--aqua-cyan); padding: 16px; border-radius: 6px; }
+
+@media(max-width:850px){ .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .house { grid-template-columns: 1fr; } .visited-btn { justify-self: start; } }
+@media(max-width:480px){ .kpis { grid-template-columns: 1fr; } .controls button, select, input { width: 100%; } }
 </style>
 </head>
 <body>
 <header>
-  <h1>🌿 Mitanin Heat Desk</h1>
-  <p>Heat-risk prioritisation for community health workers · मितानिन के लिए गर्मी जोखिम सहायता</p>
+  <h1>🌡️ Mitanin Heat Desk</h1>
+  <p>Predictive Wet-Bulb Triage & Climate Risk Decision Support · Raipur, Chhattisgarh</p>
 </header>
 <main>
   <div class="time-bar">
-    <div>🕒 <strong>Live Local Clock:</strong> <span id="liveClock">Loading time...</span></div>
-    <div>⏱️ <strong>Forecast Status:</strong> <span id="forecastSync">Active Session</span></div>
+    <div>🕒 <strong>Live Clock:</strong> <span id="liveClock">Loading time...</span></div>
+    <div>⏱️ <strong>Forecast Sync:</strong> <span id="forecastSync">Active</span></div>
   </div>
 
   <section class="card">
-    <h2>Tomorrow's heat-risk assessment</h2>
-    <p class="muted">Compare simulated hot and cool conditions, see why households are prioritised, and prepare a Hindi field briefing. Household records are synthetic demo data, not real patient records.</p>
+    <h2>Heat Stress Scenario & Field Controls</h2>
+    <p class="muted">Toggle between synthetic simulation baselines, query live Open-Meteo forecasts, or evaluate past summer dates with historical weather replay.</p>
+    
     <div class="controls">
       <label for="mitanin"><b>Health worker:</b></label>
-      
       <select id="mitanin">
-        <option value="ALL">All Mitanins — All 200 households</option>
+        <option value="ALL">All Mitanins (All Households)</option>
         <option value="M01">M01 — Ward 1</option>
         <option value="M02">M02 — Ward 2</option>
         <option value="M03">M03 — Ward 3</option>
@@ -54,50 +113,85 @@ select,button{font:inherit;border-radius:9px;padding:12px 15px}select{border:1px
         <option value="M05">M05 — Ward 5</option>
       </select>
 
-      <button class="hot" id="hotBtn">🔥 Test hot day</button>
-      <button class="cool" id="coolBtn">❄️ Test cool day</button>
-      <button class="primary" id="liveBtn">Check forecast</button>
-      <button class="secondary" id="speakBtn">🔊 Read Hindi briefing</button>
+      <button class="btn-hot" id="hotBtn">🔥 Test hot day (Simulated)</button>
+      <button class="btn-cool" id="coolBtn">❄️ Test cool day (Simulated)</button>
+      <button class="btn-primary" id="liveBtn">📡 Check Live Forecast</button>
+      <button class="btn-audio" id="speakBtn">🔊 Hindi Briefing</button>
     </div>
-    <div id="status" class="status" role="status">Ready. Choose a scenario to begin.</div>
+
+    <div class="controls" style="margin-top: 14px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+      <label for="histDate"><b>Historical Replay:</b></label>
+      <input type="date" id="histDate" min="2022-01-01" max="2026-09-01" value="2024-05-25">
+      <button class="btn-cool" id="histBtn">⏪ Run Past Date</button>
+      <span class="muted" style="font-size:12px;">Replay historical heat stress without altering synthetic household data.</span>
+    </div>
+
+    <div id="status" class="status-bar" role="status">Ready. Select a scenario or date.</div>
   </section>
 
   <section class="kpis">
-    <div class="kpi"><span>Peak air temperature</span><strong id="temp">—</strong></div>
-    <div class="kpi"><span>Peak wet-bulb temperature</span><strong id="wetbulb">—</strong></div>
-    <div class="kpi"><span>High-risk households</span><strong id="high">—</strong></div>
-    <div class="kpi"><span>Forecast source</span><strong id="source" style="font-size:20px">—</strong></div>
+    <div class="kpi"><span>Peak Air Temperature</span><strong id="temp">—</strong></div>
+    <div class="kpi"><span>Peak Wet-Bulb Temp</span><strong id="wetbulb">—</strong></div>
+    <div class="kpi"><span>High-Risk Households</span><strong id="high">—</strong></div>
+    <div class="kpi"><span>Data Engine Source</span><strong id="source" style="font-size:18px">—</strong></div>
   </section>
 
+  <!-- Feature 1: Safe Work Window -->
+  <div class="work-window-card" id="workWindowCard">
+    <h3>👷 Outdoor Labourer Safe-Work Window (Advisory)</h3>
+    <p id="workWindowText">Calculating safe working hours based on hourly wet-bulb conditions...</p>
+  </div>
+
+  <!-- Feature 2: Hourly Curve Chart -->
   <section class="card">
-    <h2>Why this score: hourly wet-bulb curve</h2>
-    <p class="muted">Wet-bulb temperature combines heat and humidity. The dotted lines are illustrative watch (28°C) and danger (31°C) reference lines, not official alerts.</p>
-    <div class="chart-wrap"><svg id="curve" class="chart" viewBox="0 0 900 250" role="img" aria-label="Hourly wet-bulb temperature chart"></svg></div>
+    <h2>Thermodynamic Wet-Bulb Curve Analysis</h2>
+    <p class="muted">Wet-bulb temperature combines heat and humidity. Reference bands denote physiological strain: 28°C watch threshold and 31°C extreme danger threshold.</p>
+    <div class="chart-wrap"><svg id="curve" class="chart" viewBox="0 0 900 260" role="img" aria-label="Hourly curve"></svg></div>
     <div class="legend">
-      <span><i class="dot" style="background:#2463eb"></i>Wet-bulb temperature</span>
-      <span><i class="dot" style="background:#f59e0b"></i>28°C watch reference</span>
-      <span><i class="dot" style="background:#ef4444"></i>31°C danger reference</span>
+      <span><i class="dot" style="background:#00adb5"></i>Wet-Bulb Temp</span>
+      <span><i class="dot" style="background:#f59e0b"></i>28°C Watch Threshold</span>
+      <span><i class="dot" style="background:#ef4444"></i>31°C Danger Reference</span>
       <span><i class="dot" style="background:#10b981"></i>Current Time Indicator</span>
     </div>
-    <p id="peakLabel" class="muted"></p>
+    <p id="peakLabel" class="muted" style="margin-top:10px;"></p>
   </section>
 
+  <!-- Feature 3: Ward View for Planners -->
   <section class="card">
-    <h2>Ranked household priority visits</h2>
-    <p class="muted">Higher scores appear first. Select “Visited / ORS given” to mark a visit in this browser session only; it is not saved to a database.</p>
-    <div id="households" class="households"><p class="muted">Run a scenario to load households.</p></div>
+    <h2>🏛️ Ward View for Health & Municipal Planners</h2>
+    <p class="muted">Resource allocation view: tracks high-risk caseloads, tin/asbestos roof vulnerability, and highlights top wards for cool-roof intervention.</p>
+    <div style="overflow-x: auto;">
+      <table class="ward-table">
+        <thead>
+          <tr>
+            <th>Ward</th>
+            <th>Total Demo Households</th>
+            <th>High-Risk Count</th>
+            <th>Tin / Asbestos Roof Share</th>
+            <th>Cool-Roof Priority</th>
+          </tr>
+        </thead>
+        <tbody id="wardTableBody">
+          <tr><td colspan="5" style="text-align:center; color:#94a3b8;">Run an assessment to view ward aggregated analytics.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
+  <!-- Household Priority Queue -->
   <section class="card">
-    <h2>Hindi field briefing</h2>
-    <p id="briefing" class="briefing">परिणाम देखने के लिए गर्म या ठंडे दिन का परीक्षण चुनें।</p>
+    <h2>Ranked Frontline Triage Queue</h2>
+    <p class="muted">Prioritized by multi-variable heat vulnerability (age, tin roofs, pregnancy, living alone, outdoor work). Mark visits in-session.</p>
+    <div id="households" class="households"><p class="muted">Run an assessment to load prioritized households.</p></div>
   </section>
 
+  <!-- Briefing -->
   <section class="card">
-    <h3>Important note</h3>
-    <p class="note">This prototype supports planning and prioritisation. It is not a medical diagnosis or an official heat warning. Confirm conditions locally and follow public-health guidance. All household data shown here is synthetic.</p>
+    <h2>Automated Hindi Field Briefing</h2>
+    <p id="briefing" class="briefing">परिणाम देखने के लिए परीक्षण या पूर्वानुमान चुनें।</p>
   </section>
 </main>
+
 <script>
 const API_BASE = window.location.hostname.includes("amplifyapp.com")
   ? "https://jiy3g526lmitpenyg25tvbbhze0dsajn.lambda-url.ap-southeast-2.on.aws"
@@ -105,41 +199,80 @@ const API_BASE = window.location.hostname.includes("amplifyapp.com")
 
 const $ = id => document.getElementById(id);
 let briefingText = "";
+let currentHouseholds = [];
 
 function updateClock() {
   const now = new Date();
-  const options = { 
-    hour: "2-digit", 
-    minute: "2-digit", 
-    second: "2-digit", 
-    hour12: true, 
-    weekday: "short", 
-    day: "numeric", 
-    month: "short",
-    timeZone: "Asia/Kolkata"
-  };
+  const options = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true, weekday: "short", day: "numeric", month: "short", timeZone: "Asia/Kolkata" };
   const liveEl = $("liveClock");
   if (liveEl) liveEl.textContent = `${now.toLocaleString("en-IN", options)} (IST)`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[ch]));
+function escapeHtml(val) {
+  return String(val ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-function hourLabel(hour) {
-  const h = Number(hour);
-  return `${h > 12 ? h - 12 : h}${h >= 12 ? "pm" : "am"}`;
+function hourLabel(h) {
+  const num = Number(h);
+  return `${num > 12 ? num - 12 : num}${num >= 12 ? "pm" : "am"}`;
 }
 
+// Compute Work Window
+function computeSafeWorkWindow(curve) {
+  if (!Array.isArray(curve) || curve.length === 0) {
+    $("workWindowText").textContent = "Advisory not available for this scenario.";
+    return;
+  }
+  const dangerHours = curve.filter(p => Number(p.wet_bulb_c) >= 28.0).map(p => Number(p.hour));
+  if (dangerHours.length === 0) {
+    $("workWindowText").innerHTML = "<strong>✅ Low Heat Stress:</strong> Safe for normal outdoor labour schedules throughout daylight hours. Maintain routine hydration.";
+  } else {
+    const startDanger = Math.min(...dangerHours);
+    const endDanger = Math.max(...dangerHours) + 1;
+    $("workWindowText").innerHTML = `<strong>⚠️ Extreme Heat Advisory:</strong> Recommend outdoor work <strong>6:00 AM to ${hourLabel(startDanger)}</strong>. Mandatory rest and indoor shade between <strong>${hourLabel(startDanger)} and ${hourLabel(endDanger)}</strong>. Resume after <strong>${hourLabel(endDanger)}</strong>.`;
+  }
+}
+
+// Render Ward Planner View
+function renderWardPlanner(households) {
+  const tbody = $("wardTableBody");
+  if (!Array.isArray(households) || households.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records available.</td></tr>';
+    return;
+  }
+  const wards = {};
+  households.forEach(h => {
+    const w = h.ward || "Unassigned";
+    if (!wards[w]) wards[w] = { total: 0, high: 0, tinRoof: 0 };
+    wards[w].total += 1;
+    if (String(h.risk).toLowerCase() === "high") wards[w].high += 1;
+    if ((h.reason_en || "").toLowerCase().includes("tin") || (h.reason_en || "").toLowerCase().includes("roof")) {
+      wards[w].tinRoof += 1;
+    }
+  });
+
+  const sortedWards = Object.entries(wards).sort((a,b) => b[1].high - a[1].high);
+  tbody.innerHTML = sortedWards.map(([wardName, stats], idx) => {
+    const tinPct = Math.round((stats.tinRoof / Math.max(1, stats.total)) * 100);
+    const isPriority = stats.high >= 1 || tinPct >= 40;
+    return `<tr>
+      <td><strong>Ward ${escapeHtml(wardName)}</strong></td>
+      <td>${stats.total}</td>
+      <td style="font-weight:700; color:${stats.high > 0 ? '#ef4444' : '#10b981'};">${stats.high}</td>
+      <td>${tinPct}% (${stats.tinRoof} households)</td>
+      <td>${isPriority ? '<span class="badge-priority">Priority 1: Cool-Roof Candidate</span>' : '<span style="color:#64748b;">Standard Monitoring</span>'}</td>
+    </tr>`;
+  }).join("");
+}
+
+// Draw Curve SVG
 function drawCurve(points) {
-  const svg = $("curve"), W=900, H=250, left=55, right=25, top=20, bottom=45;
+  const svg = $("curve"), W=900, H=260, left=55, right=25, top=25, bottom=45;
   svg.innerHTML = "";
   if (!Array.isArray(points) || points.length === 0) {
-    svg.innerHTML = '<text x="30" y="60" fill="#61736c">No hourly curve data available.</text>'; 
+    svg.innerHTML = '<text x="30" y="60" fill="#64748b">No hourly curve data available.</text>'; 
     return;
   }
   const values = points.map(p => Number(p.wet_bulb_c));
@@ -156,14 +289,14 @@ function drawCurve(points) {
     return el;
   };
 
-  [28,31].forEach((v,i)=>{
+  [28, 31].forEach((v,i)=>{
     add("line",{x1:left,y1:y(v),x2:W-right,y2:y(v),stroke:i?"#ef4444":"#f59e0b","stroke-dasharray":"6 5","stroke-width":1.5});
-    add("text",{x:5,y:y(v)-5,fill:i?"#ef4444":"#b76a00","font-size":12},`${v}°C`);
+    add("text",{x:5,y:y(v)-4,fill:i?"#ef4444":"#b45309","font-size":11,"font-weight":"600"},`${v}°C`);
   });
 
   points.forEach((p,i)=>{
-    add("line",{x1:x(i),y1:top,x2:x(i),y2:H-bottom,stroke:"#e8eeeb","stroke-width":1});
-    add("text",{x:x(i),y:H-15,fill:"#61736c","font-size":12,"text-anchor":"middle"},hourLabel(p.hour));
+    add("line",{x1:x(i),y1:top,x2:x(i),y2:H-bottom,stroke:"#e2e8f0","stroke-width":1});
+    add("text",{x:x(i),y:H-14,fill:"#64748b","font-size":12,"text-anchor":"middle"},hourLabel(p.hour));
   });
 
   const currentHour = new Date().getHours();
@@ -173,22 +306,26 @@ function drawCurve(points) {
     const frac = (currentHour - startH) / Math.max(1, endH - startH);
     const xNow = left + frac * (W - left - right);
     add("line",{x1:xNow,y1:top,x2:xNow,y2:H-bottom,stroke:"#10b981","stroke-dasharray":"4 4","stroke-width":2});
-    add("text",{x:xNow,y:top-5,fill:"#10b981","font-size":11,"font-weight":"bold","text-anchor":"middle"},`Now (${hourLabel(currentHour)})`);
+    add("text",{x:xNow,y:top-6,fill:"#10b981","font-size":11,"font-weight":"bold","text-anchor":"middle"},`Now (${hourLabel(currentHour)})`);
   }
 
   const d=points.map((p,i)=>`${i?"L":"M"} ${x(i)} ${y(Number(p.wet_bulb_c))}`).join(" ");
-  add("path",{d,fill:"none",stroke:"#2463eb","stroke-width":3.5,"stroke-linecap":"round","stroke-linejoin":"round"});
+  add("path",{d,fill:"none",stroke:"#00adb5","stroke-width":3.5,"stroke-linecap":"round","stroke-linejoin":"round"});
 
   points.forEach((p,i)=>{
-    add("circle",{cx:x(i),cy:y(Number(p.wet_bulb_c)),r:5,fill:"#2463eb"});
-    add("text",{x:x(i),y:y(Number(p.wet_bulb_c))-12,fill:"#24436d","font-size":12,"text-anchor":"middle"},`${Number(p.wet_bulb_c).toFixed(1)}°`);
+    const val = Number(p.wet_bulb_c);
+    add("circle",{cx:x(i),cy:y(val),r:5,fill:"#00adb5"});
+    // Label collision avoidance: if close to 31°C or 28°C line, offset further up
+    const offset = Math.abs(val - 31) < 0.6 || Math.abs(val - 28) < 0.6 ? 16 : 12;
+    add("text",{x:x(i),y:y(val)-offset,fill:"#0b192c","font-size":11,"font-weight":"600","text-anchor":"middle"},`${val.toFixed(1)}°`);
   });
 }
 
 function renderHouseholds(households) {
   const container=$("households");
+  currentHouseholds = households;
   if (!Array.isArray(households) || !households.length) {
-    container.innerHTML='<p class="muted">No household records returned.</p>'; return;
+    container.innerHTML='<p class="muted">No household records returned for this selection.</p>'; return;
   }
   container.innerHTML=households.map((h,i)=>{
     const risk=String(h.risk||"Low").toLowerCase();
@@ -196,25 +333,31 @@ function renderHouseholds(households) {
     return `<article class="house ${cls}">
       <div>
         <strong>${i+1}. ${escapeHtml(h.name||h.id)} <span class="meta">(Ward ${escapeHtml(h.ward||"—")})</span></strong>
-        <div class="score">Household ID: ${escapeHtml(h.id)} · Score: ${Number(h.score||0)}</div>
-        <div class="reason"><b>Reason:</b> ${escapeHtml(h.reason_en||"—")}<br><span lang="hi">${escapeHtml(h.reason_hi||"कारण उपलब्ध नहीं")}</span></div>
-        <span class="pill">${escapeHtml(h.risk||"Low")} risk</span>
+        <div class="score">Household ID: ${escapeHtml(h.id)} · Risk Index: ${Number(h.score||0)}</div>
+        <div class="reason"><b>Priority Reason:</b> ${escapeHtml(h.reason_en||"—")}<br><span lang="hi">${escapeHtml(h.reason_hi||"")}</span></div>
+        <span class="pill">${escapeHtml(h.risk||"Low")} Priority</span>
       </div>
-      <button class="visited" type="button" data-visit="${escapeHtml(h.id)}">Visited / ORS given</button>
+      <button class="visited-btn" type="button" data-visit="${escapeHtml(h.id)}">Mark Visited / ORS Given</button>
     </article>`;
   }).join("");
+
   container.querySelectorAll("[data-visit]").forEach(btn=>btn.addEventListener("click",()=>{
     btn.classList.toggle("done");
-    btn.textContent=btn.classList.contains("done")?"✓ Visit marked":"Visited / ORS given";
+    btn.textContent=btn.classList.contains("done")?"✓ Visited & Verified":"Mark Visited / ORS Given";
   }));
 }
 
-async function loadScenario(scenario) {
-  $("status").textContent="Loading assessment…";
-  $("status").className="status";
-  const mitanin=encodeURIComponent($("mitanin").value);
+async function loadScenario(scenario, dateParam = null) {
+  $("status").textContent="Loading environmental triage models…";
+  $("status").className="status-bar";
+  const mitaninVal = $("mitanin").value;
+  const mitanin = encodeURIComponent(mitaninVal === "ALL" ? "" : mitaninVal);
   const delim = API_BASE.includes("?") ? "&" : "?";
-  const url=`${API_BASE}${delim}mitanin=${mitanin}&demo=${encodeURIComponent(scenario)}`;
+  let url = `${API_BASE}${delim}mitanin=${mitanin}&demo=${encodeURIComponent(scenario)}`;
+  if (dateParam) {
+    url += `&date=${encodeURIComponent(dateParam)}`;
+  }
+
   try {
     const response=await fetch(url);
     const data=await response.json();
@@ -223,36 +366,42 @@ async function loadScenario(scenario) {
     $("temp").textContent=`${a.peak_temp_c ?? "—"} °C`;
     $("wetbulb").textContent=`${a.peak_wet_bulb_c ?? "—"} °C`;
     $("high").textContent=(data.households||[]).filter(h=>String(h.risk).toLowerCase()==="high").length;
-    $("source").textContent=data.forecast_source==="simulated"?"Simulated":(data.forecast_source||"—");
-    $("peakLabel").textContent=`Peak: ${a.peak_wet_bulb_c ?? "—"}°C at ${hourLabel(a.peak_hour ?? 13)} · severity ${a.severity ?? "—"}`;
+    $("source").textContent=dateParam ? `Historical Archive (${dateParam})` : (data.forecast_source==="simulated" ? "Simulated Baseline" : (data.forecast_source||"Open-Meteo API"));
+    $("peakLabel").textContent=`Peak Wet-Bulb: ${a.peak_wet_bulb_c ?? "—"}°C at ${hourLabel(a.peak_hour ?? 13)} · Severity Rating: ${a.severity ?? "—"}`;
     
-    const stampEl = $("forecastSync");
-    if(stampEl) {
-      stampEl.textContent = `Generated: ${new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"})} IST · Forecast peak at ${hourLabel(a.peak_hour ?? 13)}`;
-    }
+    $("forecastSync").textContent = `Sync: ${new Date().toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit"})} IST · Evaluated`;
 
     drawCurve(a.curve||[]);
+    computeSafeWorkWindow(a.curve||[]);
     renderHouseholds(data.households||[]);
+    renderWardPlanner(data.households||[]);
     briefingText=data.briefing_hi||"हिंदी ब्रीफिंग उपलब्ध नहीं है।";
     $("briefing").textContent=briefingText;
-    $("status").textContent=`Analysis complete — ${scenario==="hot"?"simulated hot day":scenario==="cool"?"simulated cool day":"live forecast"} · ${data.households?.length||0} synthetic household records`;
+    $("status").textContent=`Analysis ready · ${data.households?.length||0} synthetic household records evaluated.`;
   } catch(err) {
-    $("status").textContent=`Could not load data: ${err.message}.`;
-    $("status").className="status error";
+    $("status").textContent=`Could not load data: ${err.message}. Ensure backend is active.`;
+    $("status").className="status-bar error";
   }
 }
 
 $("hotBtn").addEventListener("click",()=>loadScenario("hot"));
 $("coolBtn").addEventListener("click",()=>loadScenario("cool"));
 $("liveBtn").addEventListener("click",()=>loadScenario("forecast"));
+$("histBtn").addEventListener("click",()=>{
+  const d = $("histDate").value;
+  if(!d){ alert("Select a historical date."); return; }
+  loadScenario("historical", d);
+});
+
 $("speakBtn").addEventListener("click",()=>{
-  if(!briefingText){$("status").textContent="Run an assessment first.";return;}
-  if(!("speechSynthesis" in window)){ $("status").textContent="Speech synthesis is not supported in this browser.";return;}
+  if(!briefingText){ $("status").textContent="Run an assessment first."; return; }
+  if(!("speechSynthesis" in window)){ $("status").textContent="Browser speech synthesis unsupported."; return; }
   window.speechSynthesis.cancel();
   const utterance=new SpeechSynthesisUtterance(briefingText);
   utterance.lang="hi-IN";utterance.rate=0.9;window.speechSynthesis.speak(utterance);
 });
 
+// Load default hot day on start
 loadScenario("hot");
 </script>
 </body>
