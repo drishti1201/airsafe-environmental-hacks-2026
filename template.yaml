@@ -3,12 +3,24 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Mitanin Heat Desk local demo
 
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET,OPTIONS'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'*'"
+
 Resources:
   HeatDeskFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: build/pkg/
-      Handler: handler.handler
+      CodeUri: .
+      Handler: src/lambda/handler.handler
       Runtime: python3.12
       Timeout: 30
-      MemorySize: 256
+      Events:
+        HeatDeskApi:
+          Type: Api
+          Properties:
+            Path: /heat
+            Method: get
