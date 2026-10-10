@@ -12,20 +12,22 @@ Mitanin Heat Desk estimates heat stress and ranks demonstration households by th
 
 ## How It Works
 
-1. Retrieves weather forecasts from Open-Meteo.
-2. Estimates wet-bulb temperature using temperature and humidity.
-3. Calculates heat-risk severity and ranks households.
-4. Generates a Hindi voice briefing using Amazon Polly.
-5. Supports recording household visit status when the required storage is configured.
+1. Retrieves tomorrow's weather forecast from Open-Meteo.
+2. Estimates wet-bulb temperature using air temperature and humidity.
+3. Calculates heat-risk severity and ranks synthetic households by priority.
+4. Generates a Hindi field briefing, with browser-based speech playback.
+5. Includes optional Amazon Polly, S3 audio storage, and DynamoDB visit logging when configured.
 
 ## Technology Stack
 
 - Python
 - AWS Lambda
+- AWS SAM CLI for local development and testing
 - Open-Meteo API
-- Amazon S3
-- Amazon Polly
-- Amazon DynamoDB (optional visit log)
+- HTML, CSS, and JavaScript
+- Browser Speech Synthesis API
+- Amazon Polly and S3 (optional audio generation and storage)
+- Amazon DynamoDB (optional visit logging)
 
 ## Testing and Deployment
 
