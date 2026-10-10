@@ -40,6 +40,17 @@ DEMO_HOT_DAY = [
     for h, t, r in [(9, 34, 68), (11, 37, 66), (13, 38, 68), (15, 37, 66), (17, 35, 70)]
 ]
 
+DEMO_COOL_DAY = [
+    {"hour": h, "temp_c": t, "rh": r}
+    for h, t, r in [
+        (9, 24, 45),
+        (11, 27, 42),
+        (13, 29, 40),
+        (15, 28, 43),
+        (17, 25, 48),
+    ]
+]
+
 
 def _households():
     for p in (HERE / "households.json", HERE.parent.parent / "data" / "households.json"):
@@ -156,6 +167,8 @@ def handler(event, context=None):
 
         if qs.get("demo") == "hot":
             forecast, source = DEMO_HOT_DAY, "simulated"
+        elif qs.get("demo") == "cool":
+            forecast, source = DEMO_COOL_DAY, "simulated"
         else:
             forecast, source = fetch_tomorrow_forecast(), "open-meteo"
 
